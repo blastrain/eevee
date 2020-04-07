@@ -1,0 +1,28 @@
+name: user_field
+datastore: db
+index:
+  primary_key: id
+  unique_keys:
+  - - user_id
+    - field_id
+members:
+- name: id
+  type: uint64
+- name: user_id
+  type: uint64
+- name: field_id
+  type: uint64
+- name: created_at
+  type:
+    package_name: time
+    name: Time
+- name: updated_at
+  type:
+    package_name: time
+    name: Time
+- name: field
+  extend: true
+  relation:
+    to: field
+    internal: field_id
+    external: id

@@ -1,0 +1,8 @@
+module: rapidashplugin
+class:  config
+schema: schema
+dao:
+  default: rapidash
+entity:
+  plugins:
+    - rapidash

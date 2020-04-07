@@ -1,0 +1,7 @@
+single:
+  default: &default
+    id: 0
+    skill_effect: ""
+collection:
+  defaults:
+  - *default

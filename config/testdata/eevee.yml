@@ -1,0 +1,10 @@
+plugins:
+  request-time:
+    repo: github.com/knocknote/eevee-request-time-plugin
+dao:
+  plugins:
+    - request-time
+  hooks:
+    before-create:
+      - request-time
+    create: request-time

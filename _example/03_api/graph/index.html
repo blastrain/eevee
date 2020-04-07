@@ -1,0 +1,293 @@
+<html>
+  <head><script src="viz.js"></script></head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <style type="text/css">
+#tables {
+    height:100vh;
+    overflow-y:scroll;
+}
+
+#graph {
+    height: 100vh;
+    overflow-y:scroll;
+}
+  </style>
+<body>
+<script type="text/dot" id="field_references">
+digraph G {
+user_field [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">user_field</td></tr>
+            <tr><td border="1">id</td><td port="id" border="1">uint64</td></tr>
+            <tr><td border="1">user_id</td><td port="user_id" border="1">uint64</td></tr>
+            <tr><td border="1">field_id</td><td port="field_id" border="1">uint64</td></tr>
+            <tr><td border="1">field</td><td port="field" border="1">Field</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="field_dependencies">
+digraph G {
+graph[rankdir=LR];
+field [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">field</td></tr>
+            <tr><td border="1" port="id">id</td><td port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="name">name</td><td port="name_type" border="1">string</td></tr>
+            <tr><td border="1" port="location_x">location_x</td><td port="location_x_type" border="1">int</td></tr>
+            <tr><td border="1" port="location_y">location_y</td><td port="location_y_type" border="1">int</td></tr>
+            <tr><td border="1" port="object_num">object_num</td><td port="object_num_type" border="1">int</td></tr>
+            <tr><td border="1" port="level">level</td><td port="level_type" border="1">int</td></tr>
+            <tr><td border="1" port="difficulty">difficulty</td><td port="difficulty_type" border="1">int</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="group_references">
+</script>
+<script type="text/dot" id="group_dependencies">
+digraph G {
+graph[rankdir=LR];
+group [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">group</td></tr>
+            <tr><td border="1" port="id">id</td><td port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="name">name</td><td port="name_type" border="1">string</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="skill_references">
+digraph G {
+user [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">user</td></tr>
+            <tr><td border="1">id</td><td port="id" border="1">uint64</td></tr>
+            <tr><td border="1">name</td><td port="name" border="1">string</td></tr>
+            <tr><td border="1">sex</td><td port="sex" border="1">string</td></tr>
+            <tr><td border="1">age</td><td port="age" border="1">int</td></tr>
+            <tr><td border="1">skill_id</td><td port="skill_id" border="1">uint64</td></tr>
+            <tr><td border="1">skill_rank</td><td port="skill_rank" border="1">int</td></tr>
+            <tr><td border="1">group_id</td><td port="group_id" border="1">uint64</td></tr>
+            <tr><td border="1">world_id</td><td port="world_id" border="1">uint64</td></tr>
+            <tr><td border="1">field_id</td><td port="field_id" border="1">uint64</td></tr>
+            <tr><td border="1">user_fields</td><td port="user_fields" border="1">UserField</td></tr>
+            <tr><td border="1">skill</td><td port="skill" border="1">Skill</td></tr>
+            <tr><td border="1">group</td><td port="group" border="1">Group</td></tr>
+            <tr><td border="1">world</td><td port="world" border="1">World</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="skill_dependencies">
+digraph G {
+graph[rankdir=LR];
+skill [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">skill</td></tr>
+            <tr><td border="1" port="id">id</td><td port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="skill_effect">skill_effect</td><td port="skill_effect_type" border="1">string</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="user_references">
+</script>
+<script type="text/dot" id="user_dependencies">
+digraph G {
+graph[rankdir=LR];
+user [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">user</td></tr>
+            <tr><td border="1" port="id">id</td><td port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="name">name</td><td port="name_type" border="1">string</td></tr>
+            <tr><td border="1" port="sex">sex</td><td port="sex_type" border="1">string</td></tr>
+            <tr><td border="1" port="age">age</td><td port="age_type" border="1">int</td></tr>
+            <tr><td border="1" port="skill_id">skill_id</td><td port="skill_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="skill_rank">skill_rank</td><td port="skill_rank_type" border="1">int</td></tr>
+            <tr><td border="1" port="group_id">group_id</td><td port="group_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="world_id">world_id</td><td port="world_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="field_id">field_id</td><td port="field_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="user_fields">user_fields</td><td port="user_fields_type" border="1">UserField</td></tr>
+            <tr><td border="1" port="skill">skill</td><td port="skill_type" border="1">Skill</td></tr>
+            <tr><td border="1" port="group">group</td><td port="group_type" border="1">Group</td></tr>
+            <tr><td border="1" port="world">world</td><td port="world_type" border="1">World</td></tr>
+            </table>>
+];
+user:user_fields_type -> user_field:user_id [ label="user : id" ];
+user:skill_type -> skill:id [ label="user : skill_id" ];
+user:world_type -> world:id [ label="user : world_id" ];
+user_field [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">user_field</td></tr>
+            <tr><td border="1" port="id">id</td><td port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" bgcolor="darkseagreen1" port="user_id">user_id</td><td bgcolor="darkseagreen1" port="user_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="field_id">field_id</td><td port="field_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="field">field</td><td port="field_type" border="1">Field</td></tr>
+            </table>>
+];
+user_field:field_type -> field:id [ label="user_field : field_id" ];
+field [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">field</td></tr>
+            <tr><td border="1" bgcolor="darkseagreen1" port="id">id</td><td bgcolor="darkseagreen1" port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="name">name</td><td port="name_type" border="1">string</td></tr>
+            <tr><td border="1" port="location_x">location_x</td><td port="location_x_type" border="1">int</td></tr>
+            <tr><td border="1" port="location_y">location_y</td><td port="location_y_type" border="1">int</td></tr>
+            <tr><td border="1" port="object_num">object_num</td><td port="object_num_type" border="1">int</td></tr>
+            <tr><td border="1" port="level">level</td><td port="level_type" border="1">int</td></tr>
+            <tr><td border="1" port="difficulty">difficulty</td><td port="difficulty_type" border="1">int</td></tr>
+            </table>>
+];
+skill [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">skill</td></tr>
+            <tr><td border="1" bgcolor="darkseagreen1" port="id">id</td><td bgcolor="darkseagreen1" port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="skill_effect">skill_effect</td><td port="skill_effect_type" border="1">string</td></tr>
+            </table>>
+];
+world [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">world</td></tr>
+            <tr><td border="1" bgcolor="darkseagreen1" port="id">id</td><td bgcolor="darkseagreen1" port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="name">name</td><td port="name_type" border="1">string</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="user_field_references">
+digraph G {
+user [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">user</td></tr>
+            <tr><td border="1">id</td><td port="id" border="1">uint64</td></tr>
+            <tr><td border="1">name</td><td port="name" border="1">string</td></tr>
+            <tr><td border="1">sex</td><td port="sex" border="1">string</td></tr>
+            <tr><td border="1">age</td><td port="age" border="1">int</td></tr>
+            <tr><td border="1">skill_id</td><td port="skill_id" border="1">uint64</td></tr>
+            <tr><td border="1">skill_rank</td><td port="skill_rank" border="1">int</td></tr>
+            <tr><td border="1">group_id</td><td port="group_id" border="1">uint64</td></tr>
+            <tr><td border="1">world_id</td><td port="world_id" border="1">uint64</td></tr>
+            <tr><td border="1">field_id</td><td port="field_id" border="1">uint64</td></tr>
+            <tr><td border="1">user_fields</td><td port="user_fields" border="1">UserField</td></tr>
+            <tr><td border="1">skill</td><td port="skill" border="1">Skill</td></tr>
+            <tr><td border="1">group</td><td port="group" border="1">Group</td></tr>
+            <tr><td border="1">world</td><td port="world" border="1">World</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="user_field_dependencies">
+digraph G {
+graph[rankdir=LR];
+user_field [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">user_field</td></tr>
+            <tr><td border="1" port="id">id</td><td port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="user_id">user_id</td><td port="user_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="field_id">field_id</td><td port="field_id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="field">field</td><td port="field_type" border="1">Field</td></tr>
+            </table>>
+];
+user_field:field_type -> field:id [ label="user_field : field_id" ];
+field [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">field</td></tr>
+            <tr><td border="1" bgcolor="darkseagreen1" port="id">id</td><td bgcolor="darkseagreen1" port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="name">name</td><td port="name_type" border="1">string</td></tr>
+            <tr><td border="1" port="location_x">location_x</td><td port="location_x_type" border="1">int</td></tr>
+            <tr><td border="1" port="location_y">location_y</td><td port="location_y_type" border="1">int</td></tr>
+            <tr><td border="1" port="object_num">object_num</td><td port="object_num_type" border="1">int</td></tr>
+            <tr><td border="1" port="level">level</td><td port="level_type" border="1">int</td></tr>
+            <tr><td border="1" port="difficulty">difficulty</td><td port="difficulty_type" border="1">int</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="world_references">
+digraph G {
+user [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">user</td></tr>
+            <tr><td border="1">id</td><td port="id" border="1">uint64</td></tr>
+            <tr><td border="1">name</td><td port="name" border="1">string</td></tr>
+            <tr><td border="1">sex</td><td port="sex" border="1">string</td></tr>
+            <tr><td border="1">age</td><td port="age" border="1">int</td></tr>
+            <tr><td border="1">skill_id</td><td port="skill_id" border="1">uint64</td></tr>
+            <tr><td border="1">skill_rank</td><td port="skill_rank" border="1">int</td></tr>
+            <tr><td border="1">group_id</td><td port="group_id" border="1">uint64</td></tr>
+            <tr><td border="1">world_id</td><td port="world_id" border="1">uint64</td></tr>
+            <tr><td border="1">field_id</td><td port="field_id" border="1">uint64</td></tr>
+            <tr><td border="1">user_fields</td><td port="user_fields" border="1">UserField</td></tr>
+            <tr><td border="1">skill</td><td port="skill" border="1">Skill</td></tr>
+            <tr><td border="1">group</td><td port="group" border="1">Group</td></tr>
+            <tr><td border="1">world</td><td port="world" border="1">World</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/dot" id="world_dependencies">
+digraph G {
+graph[rankdir=LR];
+world [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">world</td></tr>
+            <tr><td border="1" port="id">id</td><td port="id_type" border="1">uint64</td></tr>
+            <tr><td border="1" port="name">name</td><td port="name_type" border="1">string</td></tr>
+            </table>>
+];
+}
+</script>
+<script type="text/javascript">
+    function selectGraph(className) {
+        let ref                = document.getElementById(className + "_references").innerHTML;
+        let references         = document.getElementById("ref");
+        if (ref.trim() !== "") {
+            references.innerHTML = Viz(ref);
+        } else {
+            references.innerHTML = "NONE";
+        }
+        let dep                = document.getElementById(className + "_dependencies").innerHTML;
+        let dependencies       = document.getElementById("dep");
+        dependencies.innerHTML = Viz(dep);
+    };
+</script>
+<div class="row">
+  <div id="tables" class="col-3">
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-action" onClick="selectGraph('field')">field</li>
+      <li class="list-group-item list-group-item-action" onClick="selectGraph('group')">group</li>
+      <li class="list-group-item list-group-item-action" onClick="selectGraph('skill')">skill</li>
+      <li class="list-group-item list-group-item-action" onClick="selectGraph('user')">user</li>
+      <li class="list-group-item list-group-item-action" onClick="selectGraph('user_field')">user_field</li>
+      <li class="list-group-item list-group-item-action" onClick="selectGraph('world')">world</li>
+    </ul>
+  </div>
+  <div id="graph" class="col-9">
+    <div>
+      <h3>Referenced Tables</h3>
+      <div id="ref">NONE</div>
+    </div>
+    <div>
+      <h3>Dependencies</h3>
+      <div id="dep">NONE</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

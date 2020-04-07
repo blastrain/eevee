@@ -1,0 +1,56 @@
+- name: user_getter
+  desc: return user status
+  uri: /users/{userId}
+  method: get
+  request:
+    parameters:
+      - name: user_id
+        type: uint64
+        in: path
+        required: true
+      - name: session
+        type: string
+        in: header
+  response:
+    subtypes:
+      - name: user_getter_subtype
+        members:
+          - name: user
+            type: user
+            render:
+              inline: true
+          - name: param1
+            type: string
+          - name: param2
+            type: int
+        include:
+          - name: user
+            only:
+              - name
+              - param1
+              - param2
+            include:
+              - name: user_fields
+                only:
+                  - field_id
+                include:
+                  - name: field
+                    only:
+                      - name
+    type:
+      members:
+        - name: users
+          type: user
+          has_many: true
+        - name: sub
+          type: user_getter_subtype
+      include:
+        - name: users
+          only:
+            - id
+            - name
+          include:
+            - name: user_fields
+              only:
+                - field_id
+        - name: sub

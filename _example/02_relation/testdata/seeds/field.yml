@@ -1,0 +1,12 @@
+single:
+  default: &default
+    difficulty: 0
+    id: 0
+    level: 0
+    location_x: 0
+    location_y: 0
+    name: ""
+    object_num: 0
+collection:
+  defaults:
+  - *default

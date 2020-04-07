@@ -1,0 +1,24 @@
+name: user_field
+datastore: rapidash
+index:
+  primary_key: id
+  unique_keys:
+  - - user_id
+    - field_id
+members:
+- name: id
+  type: uint64
+- name: user_id
+  type: uint64
+- name: field_id
+  type: uint64
+- name: created_at
+  type:
+    import: time
+    package_name: time
+    name: Time
+- name: updated_at
+  type:
+    import: time
+    package_name: time
+    name: Time

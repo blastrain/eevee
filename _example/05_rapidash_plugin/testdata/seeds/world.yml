@@ -1,0 +1,7 @@
+single:
+  default: &default
+    id: 0
+    name: ""
+collection:
+  defaults:
+  - *default

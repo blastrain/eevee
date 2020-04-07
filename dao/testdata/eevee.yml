@@ -1,0 +1,29 @@
+plugins:
+  request-time:
+    repo: github.com/knocknote/eevee-request-time-plugin
+  user-id:
+    repo: github.com/knocknote/eevee-user-id-plugin
+  octillery:
+    repo: github.com/knocknote/eevee-octillery-plugin
+  rapidash:
+    repo: github.com/knocknote/eevee-rapidash-plugin
+dao:
+  default: db
+  datastore:
+    db:
+      before-create:
+        - request-time
+      constructor-declare: user-id
+      constructor: user-id
+      findby-declare: user-id
+      findby: user-id
+      updateby-declare: user-id
+      updateby: user-id
+      deleteby-declare: user-id
+      deleteby: user-id
+    cache:
+      before-create:
+        - request-time
+entity:
+  plugins:
+    - rapidash

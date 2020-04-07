@@ -1,0 +1,40 @@
+## {{ .Description }}
+
+```
+{{ .Method }} {{ .URI }}
+```
+
+{{- if .Request }}
+
+### Request Parameters
+
+| Name | Type | In | Required | Description | Example |
+| ---- | ---- | -- | -------- | ----------- | ------- |
+{{- range .Request.Params }}
+| **{{ .RenderName }}** | {{ .Type }} | {{ .In }} | {{ .Required }} | {{ .Desc }} | `{{ .Example }}` |
+{{- end }}
+
+{{- end }}
+
+{{- if .Response }}
+
+### Response Parameters
+
+<details>
+
+| Name | Type | Description | Example |
+| ---- | ---- | ----------- | ------- |
+{{- range .Response.Attributes }}
+| **{{ .Name }}** | {{ .Type }} | {{ .Desc }} | `{{ .Example }}` |
+{{- end }}
+
+</details>
+
+
+### Response Example
+
+```json
+{{ .Response.RenderJSON }}
+```
+
+{{- end }}

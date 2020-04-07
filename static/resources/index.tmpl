@@ -1,0 +1,8 @@
+## The table of contents
+
+### Endpoints
+
+{{- range . }}
+- <a href="./{{ .Name.SnakeName }}.md">{{ .Method }} {{ .URI }}</a>
+{{- end }}
+

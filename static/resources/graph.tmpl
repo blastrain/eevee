@@ -1,0 +1,107 @@
+<html>
+  <head><script src="viz.js"></script></head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+  <style type="text/css">
+#tables {
+    height:100vh;
+    overflow-y:scroll;
+}
+
+#graph {
+    height: 100vh;
+    overflow-y:scroll;
+}
+  </style>
+<body>
+{{- range .GraphClasses }}
+<script type="text/dot" id="{{ .Name }}_references">
+{{- if .ReferencedClasses }}
+digraph G {
+{{- range .ReferencedClasses }}
+{{- $className := .Name.SnakeName }}
+{{ $className }} [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">{{ $className }}</td></tr>
+            {{- range .Members }}
+            <tr><td border="1">{{ .Name.SnakeName }}</td><td port="{{ .Name.SnakeName }}" border="1">{{ .Type.Name }}</td></tr>
+            {{- end }}
+            </table>>
+];
+{{- end }}
+}
+{{- end }}
+</script>
+<script type="text/dot" id="{{ .Name }}_dependencies">
+digraph G {
+graph[rankdir=LR];        
+{{- $className := .Name.SnakeName }}
+{{ $className }} [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">{{ $className }}</td></tr>
+            {{- range .Members }}
+            <tr><td border="1" port="{{ .Name.SnakeName }}">{{ .Name.SnakeName }}</td><td port="{{ .Name.SnakeName }}_type" border="1">{{ .Type.Name }}</td></tr>
+            {{- end }}
+            </table>>
+];
+
+{{- range .DependencyMembers }}
+{{ $className }}:{{ .Name.SnakeName }}_type -> {{ .Type.Class.Name.SnakeName }}:{{ .Relation.External.SnakeName }} [ label="{{ $className }} : {{ .Relation.Internal.SnakeName }}" ];
+{{- end }}
+
+{{- range .Dependencies }}
+{{- $className := .Name.SnakeName }}
+{{ $className }} [
+   shape = none,
+   label = <<table border="0" cellspacing="0">
+            <tr><td border="1" bgcolor="aliceblue" colspan="2">{{ $className }}</td></tr>
+            {{- range .Members }}
+            <tr><td border="1" {{- if .IsReferencedAsExternalMember }} bgcolor="darkseagreen1" {{- end }} port="{{ .Name.SnakeName }}">{{ .Name.SnakeName }}</td><td {{- if .IsReferencedAsExternalMember }} bgcolor="darkseagreen1" {{- end }} port="{{ .Name.SnakeName }}_type" border="1">{{ .Type.Name }}</td></tr>
+            {{- end }}
+            </table>>
+];
+
+{{- range .DependencyMembers }}
+{{ $className }}:{{ .Name.SnakeName }}_type -> {{ .Type.Class.Name.SnakeName }}:{{ .Relation.External.SnakeName }} [ label="{{ $className }} : {{ .Relation.Internal.SnakeName }}" ];
+{{- end }}
+
+{{- end }}
+}
+</script>
+{{- end }}
+<script type="text/javascript">
+    function selectGraph(className) {
+        let ref                = document.getElementById(className + "_references").innerHTML;
+        let references         = document.getElementById("ref");
+        if (ref.trim() !== "") {
+            references.innerHTML = Viz(ref);
+        } else {
+            references.innerHTML = "NONE";
+        }
+        let dep                = document.getElementById(className + "_dependencies").innerHTML;
+        let dependencies       = document.getElementById("dep");
+        dependencies.innerHTML = Viz(dep);
+    };
+</script>
+<div class="row">
+  <div id="tables" class="col-3">
+    <ul class="list-group">
+      {{- range .Classes }}
+      <li class="list-group-item list-group-item-action" onClick="selectGraph('{{ .Name.SnakeName }}')">{{ .Name.SnakeName }}</li>
+      {{- end }}
+    </ul>
+  </div>
+  <div id="graph" class="col-9">
+    <div>
+      <h3>Referenced Tables</h3>
+      <div id="ref">NONE</div>
+    </div>
+    <div>
+      <h3>Dependencies</h3>
+      <div id="dep">NONE</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

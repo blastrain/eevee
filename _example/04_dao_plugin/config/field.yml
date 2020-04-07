@@ -1,0 +1,28 @@
+name: field
+datastore: db
+index:
+  primary_key: id
+  unique_keys:
+  - - name
+  - - location_x
+    - location_y
+  keys:
+  - - object_num
+  - - difficulty
+    - level
+read_only: true
+members:
+- name: id
+  type: uint64
+- name: name
+  type: string
+- name: location_x
+  type: int
+- name: location_y
+  type: int
+- name: object_num
+  type: int
+- name: level
+  type: int
+- name: difficulty
+  type: int

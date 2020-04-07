@@ -1,0 +1,8 @@
+name: skill
+index:
+  primary_key: id
+members:
+- name: id
+  type: uint64
+- name: skill_effect
+  type: string

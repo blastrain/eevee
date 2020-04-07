@@ -1,0 +1,9 @@
+single:
+  default: &default
+    field: $default
+    field_id: 0
+    id: 0
+    user_id: 0
+collection:
+  defaults:
+  - *default

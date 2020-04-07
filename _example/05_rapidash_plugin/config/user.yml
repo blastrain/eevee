@@ -1,0 +1,41 @@
+name: user
+datastore: rapidash
+index:
+  primary_key: id
+  unique_keys:
+  - - name
+  - - skill_id
+    - skill_rank
+  keys:
+  - - group_id
+  - - world_id
+    - field_id
+members:
+- name: id
+  type: uint64
+- name: name
+  type: string
+- name: sex
+  type: string
+- name: age
+  type: int
+- name: skill_id
+  type: uint64
+- name: skill_rank
+  type: int
+- name: group_id
+  type: uint64
+- name: world_id
+  type: uint64
+- name: field_id
+  type: uint64
+- name: created_at
+  type:
+    import: time
+    package_name: time
+    name: Time
+- name: updated_at
+  type:
+    import: time
+    package_name: time
+    name: Time

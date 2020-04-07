@@ -1,0 +1,11 @@
+single:
+  default: &default
+    created_at: 0001-01-01T00:00:00Z
+    field: $default
+    field_id: 0
+    id: 0
+    updated_at: 0001-01-01T00:00:00Z
+    user_id: 0
+collection:
+  defaults:
+  - *default

@@ -1,0 +1,72 @@
+name: user
+datastore: db
+index:
+  primary_key: id
+  unique_keys:
+  - - name
+  - - skill_id
+    - skill_rank
+  keys:
+  - - group_id
+  - - world_id
+    - field_id
+members:
+- name: id
+  type: uint64
+- name: name
+  type: string
+- name: sex
+  type: string
+- name: age
+  type: int
+- name: skill_id
+  type: uint64
+- name: skill_rank
+  type: int
+- name: group_id
+  type: uint64
+- name: world_id
+  type: uint64
+- name: field_id
+  type: uint64
+- name: user_fields
+  extend: true
+  has_many: true
+  relation:
+    to: user_field
+    internal: id
+    external: user_id
+- name: skill
+  extend: true
+  render:
+    inline: true
+  relation:
+    to: skill
+    internal: skill_id
+    external: id
+- name: group
+  extend: true
+  render:
+    json: group
+  relation:
+    custom: true
+    to: group
+- name: world
+  extend: true
+  render: false
+  relation:
+    to: world
+    internal: world_id
+    external: id
+- name: tx
+  type:
+    import: database/sql
+    package_name: sql
+    name: Tx
+    is_pointer: true
+  extend: true
+  render: false
+- name: fn
+  type: func(context.Context) error
+  extend: true
+  render: false

@@ -1,0 +1,16 @@
+single:
+  default: &default
+    age: 0
+    created_at: 0001-01-01T00:00:00Z
+    field_id: 0
+    group_id: 0
+    id: 0
+    name: ""
+    sex: ""
+    skill_id: 0
+    skill_rank: 0
+    updated_at: 0001-01-01T00:00:00Z
+    world_id: 0
+collection:
+  defaults:
+  - *default

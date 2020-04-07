@@ -1,0 +1,10 @@
+name: skill
+datastore: db
+index:
+  primary_key: id
+read_only: true
+members:
+- name: id
+  type: uint64
+- name: skill_effect
+  type: string

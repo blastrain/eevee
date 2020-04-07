@@ -1,0 +1,4 @@
+module: api
+graph:  graph
+class:  config/relation
+api:    config/api

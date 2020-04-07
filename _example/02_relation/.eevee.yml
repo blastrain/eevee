@@ -1,0 +1,4 @@
+module: relation
+graph:  graph
+class:  config
+schema: schema

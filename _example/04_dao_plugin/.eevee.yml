@@ -1,0 +1,19 @@
+module: daoplugin
+class:  config
+schema: schema
+dao:
+  default: db
+  datastore:
+    db:
+      before-create:
+        - request-time
+      before-update:
+        - request-time
+      constructor-declare: user-id
+      constructor: user-id
+      findby-declare: user-id
+      findby: user-id
+      updateby-declare: user-id
+      updateby: user-id
+      deleteby-declare: user-id
+      deleteby: user-id
