@@ -2,7 +2,7 @@
 
 Generate model, repository, dao sources for Go application
 
-<img width="300px" height="238px" src="https://user-images.githubusercontent.com/209884/29392112-b844b88e-8336-11e7-8435-2e472301cf36.png"></img>
+<img width="400px" src="https://user-images.githubusercontent.com/209884/29392112-b844b88e-8336-11e7-8435-2e472301cf36.png"></img>
 
 eevee はアプリケーション開発時に必要となる  
 キャッシュやデータベースといったミドルウェアとの効率的なデータのやりとりや  
@@ -22,15 +22,86 @@ eevee が提供する機能は主に次のようなものです。
 - `Eager Loading` / `Lazy Loading` を利用した効率的なデータ参照
 - テスト開発を支援する mock インスタンス作成機能
 - モデルからJSON文字列への高速な変換
-- API リクエスト・レスポンスの自動生成
+- API リクエスト・レスポンスとそのドキュメントの自動生成
 - プラグインを用いた柔軟なカスタマイズ
+
+<!-- TOC -->
+
+# 目次
+
+- [使い方](#%E4%BD%BF%E3%81%84%E6%96%B9)
+    - [eevee のインストール](#eevee-%E3%81%AE%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB)
+    - [作業ディレクトリの作成](#%E4%BD%9C%E6%A5%AD%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%81%AE%E4%BD%9C%E6%88%90)
+    - [go.mod ファイルの作成](#gomod-%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E4%BD%9C%E6%88%90)
+    - [アプリケーションコードの作成](#%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E4%BD%9C%E6%88%90)
+    - [スキーマファイルの作成](#%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%81%AE%E4%BD%9C%E6%88%90)
+    - [eevee の実行](#eevee-%E3%81%AE%E5%AE%9F%E8%A1%8C)
+    - [アプリケーションコードの書き換え](#%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E6%9B%B8%E3%81%8D%E6%8F%9B%E3%81%88)
+        - [アプリケーション実行のための準備](#%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E5%AE%9F%E8%A1%8C%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E6%BA%96%E5%82%99)
+        - [作成したデータベースに対するコネクションの作成](#%E4%BD%9C%E6%88%90%E3%81%97%E3%81%9F%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9%E3%81%AB%E5%AF%BE%E3%81%99%E3%82%8B%E3%82%B3%E3%83%8D%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%AE%E4%BD%9C%E6%88%90)
+        - [作成操作](#%E4%BD%9C%E6%88%90%E6%93%8D%E4%BD%9C)
+        - [読み出し操作](#%E8%AA%AD%E3%81%BF%E5%87%BA%E3%81%97%E6%93%8D%E4%BD%9C)
+        - [更新操作](#%E6%9B%B4%E6%96%B0%E6%93%8D%E4%BD%9C)
+        - [削除操作](#%E5%89%8A%E9%99%A4%E6%93%8D%E4%BD%9C)
+- [設定ファイル](#%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)
+    - [全体設定ファイル ( `.eevee.yml` )](#%E5%85%A8%E4%BD%93%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB--eeveeyml-)
+    - [クラスファイル](#%E3%82%AF%E3%83%A9%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)
+        - [`name`](#name)
+        - [`datastore`](#datastore)
+        - [`index`](#index)
+        - [`members`](#members)
+        - [`member.extend`](#memberextend)
+        - [`member.render`](#memberrender)
+        - [`member.relation`](#memberrelation)
+            - [`member.relation.to`](#memberrelationto)
+            - [`member.relation.internal`](#memberrelationinternal)
+            - [`member.relation.external`](#memberrelationexternal)
+            - [`member.relation.custom`](#memberrelationcustom)
+            - [`member.relation.all`](#memberrelationall)
+        - [`member.desc`](#memberdesc)
+        - [`member.example`](#memberexample)
+        - [`readonly`](#readonly)
+        - [`type` の書き方について](#type-%E3%81%AE%E6%9B%B8%E3%81%8D%E6%96%B9%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
+    - [API 定義ファイル](#api-%E5%AE%9A%E7%BE%A9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)
+        - [`name`](#name)
+        - [`desc`](#desc)
+        - [`uri`](#uri)
+        - [`method`](#method)
+        - [`response`](#response)
+            - [`response.type`](#responsetype)
+            - [`response.subtypes`](#responsesubtypes)
+            - [`response.type.include` ( `response.subtypes[].include` )](#responsetypeinclude--responsesubtypesinclude-)
+            - [`include.name`](#includename)
+            - [`include.only`](#includeonly)
+            - [`include.except`](#includeexcept)
+            - [`include.include`](#includeinclude)
+- [各機能について](#%E5%90%84%E6%A9%9F%E8%83%BD%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
+    - [スキーマ駆動開発による、モデル・リポジトリ層の自動生成](#%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E9%A7%86%E5%8B%95%E9%96%8B%E7%99%BA%E3%81%AB%E3%82%88%E3%82%8B%E3%83%A2%E3%83%87%E3%83%AB%E3%83%BB%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E5%B1%A4%E3%81%AE%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90)
+    - [モデル間の依存関係の自動解決](#%E3%83%A2%E3%83%87%E3%83%AB%E9%96%93%E3%81%AE%E4%BE%9D%E5%AD%98%E9%96%A2%E4%BF%82%E3%81%AE%E8%87%AA%E5%8B%95%E8%A7%A3%E6%B1%BA)
+    - [`Eager Loading` / `Lazy Loading` を利用した効率的なデータ参照](#eager-loading--lazy-loading-%E3%82%92%E5%88%A9%E7%94%A8%E3%81%97%E3%81%9F%E5%8A%B9%E7%8E%87%E7%9A%84%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E5%8F%82%E7%85%A7)
+        - [`Eager Loading` を用いた `N + 1` 問題の解決](#eager-loading-%E3%82%92%E7%94%A8%E3%81%84%E3%81%9F-n--1-%E5%95%8F%E9%A1%8C%E3%81%AE%E8%A7%A3%E6%B1%BA)
+        - [`Lazy Loading` を用いた効率的なデータ参照](#lazy-loading-%E3%82%92%E7%94%A8%E3%81%84%E3%81%9F%E5%8A%B9%E7%8E%87%E7%9A%84%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E5%8F%82%E7%85%A7)
+    - [テスト開発を支援する mock インスタンス作成機能](#%E3%83%86%E3%82%B9%E3%83%88%E9%96%8B%E7%99%BA%E3%82%92%E6%94%AF%E6%8F%B4%E3%81%99%E3%82%8B-mock-%E3%82%A4%E3%83%B3%E3%82%B9%E3%82%BF%E3%83%B3%E3%82%B9%E4%BD%9C%E6%88%90%E6%A9%9F%E8%83%BD)
+    - [モデルからJSON文字列への高速な変換](#%E3%83%A2%E3%83%87%E3%83%AB%E3%81%8B%E3%82%89json%E6%96%87%E5%AD%97%E5%88%97%E3%81%B8%E3%81%AE%E9%AB%98%E9%80%9F%E3%81%AA%E5%A4%89%E6%8F%9B)
+    - [API リクエスト・レスポンスとそのドキュメントの自動生成](#api-%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88%E3%83%BB%E3%83%AC%E3%82%B9%E3%83%9D%E3%83%B3%E3%82%B9%E3%81%A8%E3%81%9D%E3%81%AE%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88%E3%81%AE%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90)
+    - [プラグインを用いた柔軟なカスタマイズ](#%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%82%92%E7%94%A8%E3%81%84%E3%81%9F%E6%9F%94%E8%BB%9F%E3%81%AA%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%9E%E3%82%A4%E3%82%BA)
+- [eevee による実践的な開発方法](#eevee-%E3%81%AB%E3%82%88%E3%82%8B%E5%AE%9F%E8%B7%B5%E7%9A%84%E3%81%AA%E9%96%8B%E7%99%BA%E6%96%B9%E6%B3%95)
+    - [watch モードを利用する](#watch-%E3%83%A2%E3%83%BC%E3%83%89%E3%82%92%E5%88%A9%E7%94%A8%E3%81%99%E3%82%8B)
+    - [repository に API を追加する](#repository-%E3%81%AB-api-%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+    - [dao に実装されている一部の API の中身を自由に書き変える](#dao-%E3%81%AB%E5%AE%9F%E8%A3%85%E3%81%95%E3%82%8C%E3%81%A6%E3%81%84%E3%82%8B%E4%B8%80%E9%83%A8%E3%81%AE-api-%E3%81%AE%E4%B8%AD%E8%BA%AB%E3%82%92%E8%87%AA%E7%94%B1%E3%81%AB%E6%9B%B8%E3%81%8D%E5%A4%89%E3%81%88%E3%82%8B)
+    - [model に API を追加する](#model-%E3%81%AB-api-%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B)
+    - [`relation.custom` を利用する](#relationcustom-%E3%82%92%E5%88%A9%E7%94%A8%E3%81%99%E3%82%8B)
+- [Committers](#committers)
+- [License](#license)
+
+<!-- /TOC -->
 
 # 使い方
 
 まずは実際に eevee を利用することで何ができるようになるのかを見ていきます。  
 ここで紹介しているコードは [_example/01_simple](https://github.com/knocknote/eevee/tree/master/_example/01_simple) 配下に置かれています。
 
-## 1. eevee のインストール
+## eevee のインストール
 
 ```bash
 $ go get go.knocknote.io/eevee/cmd/eevee
@@ -39,11 +110,11 @@ $ go get go.knocknote.io/eevee/cmd/eevee
 無事インストールできていれば、 `$GOPATH/bin/eevee` があるはずです。  
 `eevee help` が実行できれば、インストールは完了です
 
-## 2. 作業ディレクトリの作成
+## 作業ディレクトリの作成
 
 アプリケーション開発のための作業用ディレクトリを作成してください
 
-## 3. go.mod ファイルの作成
+## go.mod ファイルの作成
 
 いつものように `go.mod` ファイルを作成してください
 
@@ -51,7 +122,7 @@ $ go get go.knocknote.io/eevee/cmd/eevee
 $ go mod init simple
 ```
 
-## 4. アプリケーションコードの作成
+## アプリケーションコードの作成
 
 今回は [echo](https://echo.labstack.com) の https://echo.labstack.com/cookbook/crud をベースに
 `eevee` を利用したいと思います。
@@ -138,7 +209,7 @@ func main() {
 
 まずは、上記のコードを `server.go` として保存します。
 
-## 5. スキーマファイルの作成
+## スキーマファイルの作成
 
 `user` に関するデータを MySQL 上に保存することにしたので、まずはそのスキーマを定義します。  
 次のようなコマンドで、 `id` と `name` というカラムをもった `users` テーブルを作るDDLが書かれたファイルを作成します。
@@ -154,7 +225,7 @@ CREATE TABLE `users` (
 EOS
 ```
 
-## 6. eevee の実行
+## eevee の実行
 
 eevee の `init` コマンドを実行します。
 
@@ -199,7 +270,7 @@ $ eevee run
 
 新しく、 `config` `entity` `dao` `model` `repository` というディレクトリが作られています。
 
-## 7. アプリケーションコードの書き換え
+## アプリケーションコードの書き換え
 
 それでは、自動生成されたコードを使って `server.go` を修正します。  
 修正した後のコードは以下です。
@@ -359,7 +430,7 @@ func main() {
 
 ひとつずつ見ていきます。
 
-### 1. アプリケーション実行のための準備
+### アプリケーション実行のための準備
 
 ```go
 func init() {
@@ -393,7 +464,7 @@ func init() {
 ここでは、ローカルの MySQL サーバにつないで、 `eevee` という名前のデータベースを作成し、
 そこに `users` テーブルを作成しています ( もしすでに存在してたら削除します )。
 
-### 2. 作成したデータベースに対するコネクションの作成
+### 作成したデータベースに対するコネクションの作成
 
 ```go
 func main() {
@@ -443,7 +514,7 @@ var (
 
 で、 `db` インスタンスをグローバルに定義し、 `CRUD` 操作のいずれからも同じインスタンスを参照するようにします。
 
-### 3. 作成操作
+### 作成操作
 
 CRUD のうち、 CREATE は以下のように変わりました。
 
@@ -500,7 +571,7 @@ if err != nil {
 `model` パッケージにはアプリケーション開発に役立つ API が豊富に存在します ( 詳細は後述 )。  
 ここではデータベース上に作成されたレコードと対応するインスタンスが返却されたと考えてください。
 
-### 4. 読み出し操作
+### 読み出し操作
 
 CRUD のうち、 READ は以下のように変わりました。
 
@@ -552,7 +623,7 @@ if err != nil {
 return c.JSON(http.StatusOK, user)
 ```
 
-### 5. 更新操作
+### 更新操作
 
 CRUD のうち、 UPDATE は以下のように変わりました。
 
@@ -605,7 +676,7 @@ eevee が自動生成したコードを用いてリソースを更新するに�
 `Save()` を呼んだ際にレコードの更新処理が走ります。
 
 
-### 6. 削除操作
+### 削除操作
 
 CRUD のうち、 DELETE は以下のように変わりました。
 
@@ -775,21 +846,21 @@ members:
 
 この内容をもとに、基本的なパラメータの説明をします。
 
-### 1. `name` 
+### `name` 
 クラス名を記載します。スキーマから生成した場合は、スキーマ名の単数形になります
 
-### 2. `datastore`
+### `datastore`
 
 `dao` でやりとりする外部のミドルウェアの種類を記述します。  
 `.eevee.yml` で設定したデフォルトの `datastore` の名前が書き込まれます。  
 何も設定しない場合は `db` になります。
 
-### 3. `index`
+### `index`
 
 スキーマに記述した `PRIMARY KEY` , `UNIQUE KEY` , `KEY` の設定を反映したものになります。  
 基本的にこの部分を手動で編集する必要はありません
 
-### 4. `members`
+### `members`
 
 スキーマの各カラムに対応する定義を記述します。  
 基本的には `name` と `type` の組み合わせとなり、 `name` はカラム名、 `type` は SQL での型を `Go` の型に変換したものが利用されます。  
@@ -835,14 +906,14 @@ members:
 `members` に新しく `user_fields` , `skill` , `group` , `world` を追加しました。  
 それぞれの `member` で利用されているパラメータは以下のようなものです。
 
-### 4.1 `member.extend`
+### `member.extend`
 
 `extend: true` として定義したメンバは、 `entity` のメンバ変数には現れず、 `model` のメンバ変数にのみ追加されることを意味します。  
 
 `eevee` は自動生成時に `entity` や `model` といったパッケージを生成しますが、
 `entity` にはシリアライズ対象のメンバ変数のみをもたせ、アプリケーションロジックを記述する上で必要な状態変数などは `model` のメンバ変数として定義することを推奨しています。  
 
-### 4.2 `member.render`
+### `member.render`
 
 `model` として定義されたオブジェクトを `JSON` などにエンコードする際のふるまいをカスタマイズするために使用します。
 `render: false` として定義されたメンバは、エンコード・デコードの
@@ -856,45 +927,45 @@ render:
 
 のように、レンダリングプロトコルごとにエンコード・デコード時の名前を変更することができます。 `json` や `msgpack` など、複数のプロトコルに対応したい場合はこの記法を利用してください。 ( 何も設定しない場合は、 `lowerCamelCase` が使用されます )
 
-### 4.3 `member.relation`
+### `member.relation`
 
 スキーマ間の依存関係を定義するためのパラメータです。  
 このパラメータを定義することによって、
 依存先のインスタンスを取得するためのアクセサが自動生成されるようになります。
 
-#### 4.3.1 `member.relation.to`
+#### `member.relation.to`
 
 依存先のクラス名を書きます。ここでのクラス名とは、クラスファイルの `name` パラメータです。
 
-#### 4.3.2 `member.relation.internal`
+#### `member.relation.internal`
 
 依存先のインスタンスを取得するために利用する自クラスのメンバーの名前を指定します。
 
-#### 4.3.3 `member.relation.external`
+#### `member.relation.external`
 
 依存先のインスタンスを取得するために利用する依存先クラスのメンバーの名前を指定します。
 
-#### 4.3.4 `member.relation.custom`
+#### `member.relation.custom`
 
 クラス間の紐付けルールが複雑な場合など、 `internal` , `external` の枠にとらわれずに依存先のインスタンスを取得したい場合に利用します。
 このパラメータと `internal`, `external` パラメータを併用することはできません。
 
-#### 4.3.5 `member.relation.all`
+#### `member.relation.all`
 
 依存先クラスの値をすべて取得したい場合に利用します。`internal` , `external` パラメータと併用することはできません。
 
 その他にも、以下のパラメータが利用できます。
 
-### 4.4 `member.desc`
+### `member.desc`
 
 そのメンバの役割を把握するためのドキュメントを記述します。  
 このパラメータは APIドキュメントを自動生成する際に利用されます。
 
-### 4.5 `member.example`
+### `member.example`
 
 そのメンバがとる値の例を記述します。ここで指定した値は、APIドキュメントの自動生成に利用される他、テスト時のモックオブジェクト作成用データとしても利用されます。
 
-## 5. `read_only`
+### `read_only`
 
 `read_only: true` と書くと、そのクラスは読み込み専用と解釈され、  
 CRUD のうち READ 操作を行う API のみ自動生成されます。
@@ -903,7 +974,7 @@ CRUD のうち READ 操作を行う API のみ自動生成されます。
 管理者側であらかじめ用意したデータセット(マスターデータ)に用いることができます。
 アプリケーションの利用者側から API を通して変更できるデータでない場合は `read_only: true` を指定すると安全に開発することができます。
 
-## `type` の書き方について
+### `type` の書き方について
 
 `member.type` は複数の記述方法があります。  
 もっともシンプルなのは、型をそのまま書く方法です。例えば以下のように書くことができます。
@@ -936,8 +1007,150 @@ members:
 この記法はアプリケーションで定義した型情報やサードパーティ製のライブラリで
 利用されている構造体を定義したい場合に有効です。
 
+## API 定義ファイル
 
-# スキーマ駆動開発による、モデル・リポジトリ層の自動生成
+API リクエストのパラメータを Go の構造体へマッピングする処理や、レスポンスに用いる JSON 文字列の作成支援を行う機能を利用するための設定方法について説明します。
+
+はじめに、API定義は `YAML` を用いて記述しますが、そのファイルを格納するディレクトリを
+`eevee` に教えるために、 `.eevee.yml` に次のように指定します。
+
+`.eevee.yml`
+```yaml
+api: config/api
+```
+
+上記のように設定すると、 `config/api` 配下の `YAML` ファイルを読みに行き、
+自動生成が走るようになります。
+
+次に、ユーザー情報を返す API を例に `YAML` の書き方について説明します。
+APIの名前を `user_getter` とし、次のように定義しました。
+
+```yaml
+- name: user_getter
+  desc: return user status
+  uri: /users/:user_id
+  method: get
+  response:
+    subtypes:
+      - name: user_getter_subtype
+        members:
+          - name: user
+            type: user
+            render:
+              inline: true
+          - name: param1
+            type: string
+          - name: param2
+            type: int
+        include:
+          - name: user
+            only:
+              - name
+              - param1
+              - param2
+            include:
+              - name: user_fields
+                only:
+                  - field_id
+                include:
+                  - name: field
+                    only:
+                      - name
+    type:
+      members:
+        - name: users
+          type: user
+          has_many: true
+        - name: sub
+          type: user_getter_subtype
+      include:
+        - name: user
+          only:
+            - id
+            - name
+          include:
+            - name: user_fields
+              only:
+                - field_id
+```
+
+説明のために、あえて複雑なレスポンスを定義してみました。  
+大事なのは `response` の部分で、ここにレスポンスの構造を記述していきます。  
+APIはリストで記述していきます。つまり、1つのファイルに複数のAPI定義を書くことができます。  
+
+### `name`
+
+API名を記述します。この名前を利用してリクエストやレスポンスを処理するための構造体を作成します
+
+### `desc`
+
+API の説明を記述します。ドキュメントに反映されます
+
+### `uri`
+
+API にアクセスするための URI を記述します。ドキュメントに反映されます。
+
+### `method`
+
+HTTP メソッド ( `get` `post` `put` `delete` ) を記載してください。  
+指定したメソッドにあわせて、リクエストパラメータのデコード処理が変化します。
+
+### `response`
+
+`response` には `subtypes` と `type` を記述することができます
+
+#### `response.type`
+ 
+レスポンス用の構造体の定義を記述します。  
+記述方法は、クラスファイルと同じように、 `members` を定義して行います。
+
+#### `response.subtypes`
+
+`response.type` を表現する際に階層構造を作りたい場合や、  
+他のAPIとレスポンス構造をシェアしたい場合など、より複雑な構造を記述したい場合に利用します。  
+記述方法は、クラスファイルと同じように、 `members` を定義して行います。
+
+`subtypes` にはリスト構造で複数の `subtype` を定義することができます。
+
+
+#### `response.type.include` ( `response.subtypes[].include` )
+
+`type` , `subtype` には、 `members` の他に `include` プロパティがあります。  
+`include` を適切に利用することで、依存関係にあるすべてのクラスを取得・レンダリングせずに、
+必要な部分だけをレスポンスに含めることができます。  
+
+#### `include.name`
+
+レスポンスに含めたいメンバのうち
+
+1. クラスファイルに定義されているもの
+2. subtype として定義されているもの
+
+の名前を記載します。
+
+#### `include.only`
+
+`include.name` で指定された定義のうち、 `members` の中でレスポンスに含めたいものを指定します。  
+ここで指定できるのは、リレーション定義のないメンバのみです。
+
+※ `include.except` と併用することはできません
+
+#### `include.except`
+
+`include.name` で指定された定義のうち、 `members` の中でレスポンスに含めたくないものを指定します。  
+ここで指定できるのは、リレーション定義のないメンバのみです。
+
+※ `include.only` と併用することはできません
+
+#### `include.include`
+
+`include.name` で指定された定義のうち、 `members` の中でリレーション定義をもつメンバに対して、
+レスポンスに含めたいものの定義を記述します。  
+再帰的に記述していくことが可能です。
+
+# 各機能について
+
+## スキーマ駆動開発による、モデル・リポジトリ層の自動生成
 
 `eevee` はスキーマ駆動開発を前提としています。  
 はじめにスキーマを定義してそれを読み込むことで **クラスファイル** を生成し、
@@ -948,19 +1161,18 @@ members:
 
 自動生成されたパッケージは大まかに以下の図のような依存関係を持ちます
 
-![eevee_arch](https://user-images.githubusercontent.com/209884/77878544-7e1fe580-7293-11ea-8241-3f66f2a9cc9e.png)
+<img src="https://user-images.githubusercontent.com/209884/77878544-7e1fe580-7293-11ea-8241-3f66f2a9cc9e.png" width="500px"/>
 
 図は一番左から右へ、または一番右から左へ矢印の向きに沿って見ます。  
-アプリケーション固有のロジックから `eevee` の機能を利用する場合、 `repository` と `model` パッケージを利用します。  
-つまり、アプリケーションロジックを記述する場合は、この2つのパッケージに注力すれば良いことになります。  
-`repository` , `model` は裏で `dao` パッケージを利用します。 `dao` は `DataAccessObject` の略で、アプリケーション外部とデータをやりとりするためのローレベルなAPIを提供します。  
+ビジネスロジックから `eevee` の機能を利用する場合、 `repository` と `model` パッケージを利用します。  
+`repository` , `model` は裏で `dao` パッケージを利用します。 `dao` は `DataAccessObject` の略で、アプリケーション外部のプロセスとデータをやりとりするためのローレベルなAPIを提供します。  
 `dao` が外部とやりとりする場合、必ず `entity` パッケージを利用します。  
 `entity` にはシリアライズ可能なデータ構造が定義されており、  
 このデータ構造を通して `dao` が適切にシリアライズ・デシリアライズすることで外部とのやりとりを実現します。
 
 データの読み込み方向に注目すると以下の図のようになります。
 
-![eevee_read_arch](https://user-images.githubusercontent.com/209884/77878551-81b36c80-7293-11ea-9e1c-50dc48322ff4.png)
+<img src="https://user-images.githubusercontent.com/209884/77878551-81b36c80-7293-11ea-9e1c-50dc48322ff4.png" width="500px"/>
 
 大きく、 1 と 2 の 2通りの読み込み方法があります。
 まずアプリケーションからデータを取得したいと思った場合は、 `repository` を利用します。 `repository` が提供する `CRUD` API を通して `dao` を経由しつつデータを取得します。このとき、 `dao` が扱うデータ構造は `entity` のため、アプリケーションから利用しやすいように `model` に変換することも行います。  
@@ -970,7 +1182,7 @@ members:
 
 一方、データの書き込み方向に注目すると以下の図のようになります。
 
-![eevee_write_arch](https://user-images.githubusercontent.com/209884/77878556-8415c680-7293-11ea-8f2d-6f0c26995d57.png)
+<img src="https://user-images.githubusercontent.com/209884/77878556-8415c680-7293-11ea-8f2d-6f0c26995d57.png" width="500px"/>
 
 こちらも 2 通りの方法があり、シンプルなのは `repository` を使ったものです。  
 `repository` にはそのまま `CRUD` ができる API があるので、そちらを通して `Create` , `Update` , `Delete` を実行すれば、 `dao` を通して書き込み操作が反映されます。  
@@ -978,7 +1190,7 @@ members:
 その場合は、モデルの内容を作成・または更新したいものに書き換えた後に `Save()` を呼ぶことで行うことができます。  
 あわせて、 `Create` `Update` `Delete` といった直感的な API も用意しているので、用途によって使い分けることも可能です。
 
-# モデル間の依存関係の自動解決
+## モデル間の依存関係の自動解決
 
 **クラスファイル** にデータの依存関係を適切に記述することで開発を効率的に進めることができるようになります。  
 
@@ -1035,7 +1247,7 @@ userFields.Each(func(userField *model.UserField)) {
 
 この機能の重要な点は、あるクラスが関連するデータをすべてそのクラスのインスタンスから取得することができるということです。これによって、( エラー処理が入るので実際には利用感は異なりますが ) チェーンアクセスで依存データを取得することができたり、API レスポンスにあるインスタンスの関連データをすべて反映したりすることができるようになります。
 
-# `Eager Loading` / `Lazy Loading` を利用した効率的なデータ参照
+## `Eager Loading` / `Lazy Loading` を利用した効率的なデータ参照
 
 前項で触れましたが、 `eevee` にはモデル間の依存関係を解決する機能があります。  
 この機能を提供する上で大切にしたのは次の2点です。  
@@ -1045,7 +1257,7 @@ userFields.Each(func(userField *model.UserField)) {
 
 それぞれどのように解決しているのかを説明します。
 
-## `Eager Loading` を用いた `N + 1` 問題の解決
+### `Eager Loading` を用いた `N + 1` 問題の解決
 
 モデルをインスタンス化する際、 `eevee` では複数のインスタンスをまとめる場合、
 スライスではなくコレクション構造体を利用します。
@@ -1098,7 +1310,7 @@ users.Each(func(user *model.User)) {
 }
 ```
 
-## `Lazy Loading` を用いた効率的なデータ参照
+### `Lazy Loading` を用いた効率的なデータ参照
 
 前項で、他インスタンスへのアクセサが関数オブジェクトになっていることを説明しました。  
 そのため、データを取得しにいくのは関数を読んときだけになります。  
@@ -1139,7 +1351,7 @@ mock 時のインターフェースは https://github.com/golang/mock を参考�
 `model` パッケージを自動生成しているという設計上のメリットを使って、
 `JSON` 文字列へエンコードする処理を静的に生成しています。これによって `reflect` 要らずとなっているため、 `encoding/json` を利用した `JSON` 文字列への変換よりも大分高速になっています。
 
-## API リクエスト・レスポンスの自動生成
+## API リクエスト・レスポンスとそのドキュメントの自動生成
 
 なぜ API リクエスト・レスポンスの作成までも支援しているか。  
 それは `eevee` がもつメリットを最大限活かすために、レスポンス作成まで支援する必要があったからです。リクエストの方はレスポンス開発と同じ仕組みで開発できた方が便利だろうという理由からサポートしています。
@@ -1167,6 +1379,151 @@ API レスポンスに必要なメンバの取捨選択もできるようにし�
 ## プラグインを用いた柔軟なカスタマイズ
 
 `eevee` が自動生成するパッケージ ( `entity` , `dao` , `repository` , `model` ) のうち、アプリケーションごとに設定が必要な部分は主に `dao` の部分です。
+
+# eevee による実践的な開発方法
+
+## watch モードを利用する
+
+`eevee` を用いて数百を超えるクラスファイルを記述していくと、
+徐々に `eevee run` の時間が気になるようになっていきます。  
+
+また、 クラスファイルや `dao` のソースコードを修正した場合に、
+`eevee run` を実行するのを忘れてしまい、
+自動生成対象を更新せずにコミットしてしまうようなことも起きるかもしれません。  
+
+こういった問題を解決するために、
+`eevee` には `-w` オプションをつけて起動することで、
+ファイル変更イベントを監視して変更があったファイルに関連するファイルだけ
+自動生成を走らせる機能があります。  
+
+この
+
+1. `eevee -w`
+2. クラスファイルに依存先の定義を書くこと
+3. そのクラスをレスポンスに含めること
+
+の3つを組み合わせることで 「 `YAML` ファイルを変更した瞬間にレスポンス内容が変わる」という開発体験を得ることができます。  
+この体験がとにかく良いので、ぜひ `watch` モードを利用して開発してください
+
+## repository に API を追加する
+
+`repository` を用いてアクセスできる API は、スキーマファイルで定義したインデックス情報に基づいています。 ( `PRIMARY KEY` や `UNIQUE KEY` , `KEY` を適切に設定することで、それらのインデックスを用いた API を自動生成し、 `repository` を用いてアクセスできるようになります )  
+
+このため、まずはインデックスを見直して生成するAPIを調整していただきたいですが、
+自動生成対象になっているのは `Equal` で比較できるものだけになっています。  
+それでは範囲検索や複雑なクエリを発行したい場合に困るので、
+`eevee` には好きな API を `repository` に追加できる機能も存在します。  
+
+`repository` に存在する API は、 `dao` に存在する公開 API をもとに自動生成しています。
+( `repository` は完全自動生成のパッケージです。基本的に手動で何か処理を書き足すことはありません )  
+
+例えば、以下のような `dao` パッケージのファイルがある場合 ( `_example/01_simple/dao/user.go` )
+
+```go
+package dao
+
+import (
+...
+)
+
+type User interface {
+	Count(context.Context) (int64, error)
+	Create(context.Context, *entity.User) error
+	Delete(context.Context, *entity.User) error
+	DeleteByID(context.Context, uint64) error
+	DeleteByIDs(context.Context, []uint64) error
+	FindAll(context.Context) (entity.Users, error)
+	FindByID(context.Context, uint64) (*entity.User, error)
+	FindByIDs(context.Context, []uint64) (entity.Users, error)
+	Update(context.Context, *entity.User) error
+	UpdateByID(context.Context, uint64, map[string]interface{}) error
+	UpdateByIDs(context.Context, []uint64, map[string]interface{}) error
+}
+
+( 実装は省略 )
+```
+
+`repository` パッケージは次のようになります。
+
+```go
+// Code generated by eevee. DO NOT EDIT!
+
+package repository
+
+import (
+...
+)
+
+type User interface {
+	ToModel(*entity.User) *model.User
+	ToModels(entity.Users) *model.Users
+	Create(context.Context, *entity.User) (*model.User, error)
+	Creates(context.Context, entity.Users) (*model.Users, error)
+	FindAll(context.Context) (*model.Users, error)
+	FindByID(context.Context, uint64) (*model.User, error)
+	FindByIDs(context.Context, []uint64) (*model.Users, error)
+	UpdateByID(context.Context, uint64, map[string]interface{}) error
+	UpdateByIDs(context.Context, []uint64, map[string]interface{}) error
+	DeleteByID(context.Context, uint64) error
+	DeleteByIDs(context.Context, []uint64) error
+	Count(context.Context) (int64, error)
+	Delete(context.Context, *entity.User) error
+	Update(context.Context, *entity.User) error
+}
+
+( 実装は省略 )
+```
+
+つまり、 `dao` に定義されている同名のクラスの `interface` の内容を解析して、 
+`entity` の返り値を `model` のものに変換した内容が `repository` の `interface` に反映されます。  
+このルールを利用すると、何か API を追加したい場合は以下のような手順で行うことができます。
+
+1. `dao` に API を追加する
+
+```go
+package dao
+
+import (
+...
+)
+
+type User interface {
+ ( 省略 )
+ FindByRange(startAt time.Time, endAt time.Time) (entity.Users, error)
+}
+
+func (*UserImpl) FindByRange(startAt time.Time, endAt time.Time) (entity.Users, error) {
+  ....
+}
+```
+
+2. `eevee run` を実行
+
+3. `repository.User` に API が追加される
+
+```go
+
+package repository
+
+import (
+  ...
+)
+
+type User interface {
+  ( 省略 )
+  FindByRange(startAt time.Time, endAt time.Time) (*model.Users, error)
+}
+```
+
+## dao に実装されている一部の API の中身を自由に書き変える
+
+「repository に API を追加する」で述べた機能を実現するため、
+`dao` パッケージのファイルは同一ファイル内で自動生成と手動編集が混在することを許容しており、
+**自動生成マーカー** によって実現しています。
+
+## model に API を追加する
+
+## `relation.custom` を利用する
 
 # Committers
 
