@@ -1,12 +1,3 @@
-plugins:
-  request-time:
-    repo: github.com/knocknote/eevee-request-time-plugin
-  user-id:
-    repo: github.com/knocknote/eevee-user-id-plugin
-  octillery:
-    repo: github.com/knocknote/eevee-octillery-plugin
-  rapidash:
-    repo: github.com/knocknote/eevee-rapidash-plugin
 dao:
   default: db
   datastore:
