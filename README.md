@@ -45,6 +45,36 @@ eevee が提供する機能は主に次のようなものです。
         - [削除操作](#%E5%89%8A%E9%99%A4%E6%93%8D%E4%BD%9C)
 - [設定ファイル](#%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)
     - [全体設定ファイル ( `.eevee.yml` )](#%E5%85%A8%E4%BD%93%E8%A8%AD%E5%AE%9A%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB--eeveeyml-)
+        - [`module`](#module)
+        - [`schema`](#schema)
+        - [`class`](#class)
+        - [`graph`](#graph)
+        - [`output`](#output)
+        - [`api`](#api)
+        - [`document`](#document)
+        - [`dao`](#dao)
+            - [`dao.name`](#daoname)
+            - [`dao.default`](#daodefault)
+            - [`dao.datastore`](#daodatastore)
+        - [`entity`](#entity)
+            - [`entity.name`](#entityname)
+            - [`entity.plugins`](#entityplugins)
+        - [`model`](#model)
+            - [`model.name`](#modelname)
+        - [`repository`](#repository)
+            - [`repository.name`](#repositoryname)
+        - [`context`](#context)
+            - [`context.import`](#contextimport)
+        - [`plural`](#plural)
+            - [`plural[].name`](#pluralname)
+            - [`plural[].one`](#pluralone)
+        - [`renderer`](#renderer)
+            - [`renderer.style`](#rendererstyle)
+        - [`primitivetypes`](#primitivetypes)
+            - [`primitivetypes[].name`](#primitivetypesname)
+            - [`primitivetypes[].packagename`](#primitivetypespackagename)
+            - [`primitivetypes[].default`](#primitivetypesdefault)
+            - [`primitivetypes[].as`](#primitivetypesas)
     - [クラスファイル](#%E3%82%AF%E3%83%A9%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)
         - [`name`](#name)
         - [`datastore`](#datastore)
@@ -75,6 +105,7 @@ eevee が提供する機能は主に次のようなものです。
             - [`include.only`](#includeonly)
             - [`include.except`](#includeexcept)
             - [`include.include`](#includeinclude)
+        - [`includeall`](#includeall)
 - [各機能について](#%E5%90%84%E6%A9%9F%E8%83%BD%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)
     - [スキーマ駆動開発による、モデル・リポジトリ層の自動生成](#%E3%82%B9%E3%82%AD%E3%83%BC%E3%83%9E%E9%A7%86%E5%8B%95%E9%96%8B%E7%99%BA%E3%81%AB%E3%82%88%E3%82%8B%E3%83%A2%E3%83%87%E3%83%AB%E3%83%BB%E3%83%AA%E3%83%9D%E3%82%B8%E3%83%88%E3%83%AA%E5%B1%A4%E3%81%AE%E8%87%AA%E5%8B%95%E7%94%9F%E6%88%90)
     - [モデル間の依存関係の自動解決](#%E3%83%A2%E3%83%87%E3%83%AB%E9%96%93%E3%81%AE%E4%BE%9D%E5%AD%98%E9%96%A2%E4%BF%82%E3%81%AE%E8%87%AA%E5%8B%95%E8%A7%A3%E6%B1%BA)
@@ -775,6 +806,172 @@ entity:
     - plugin-name
 ```
 
+### `module`
+
+Go のソースコードを自動生成する際に利用するモジュール名を指定します。
+`go.mod` が存在する場合は自動的にモジュール名を読み取って書き込みます。
+
+### `schema`
+
+スキーマファイルを配置する場所を指定することができます
+
+### `class`
+
+クラスファイルを生成するパスを指定することができます
+
+### `graph`
+
+クラスファイルの依存関係を可視化したウェブページを表示する機能です。  
+`graph: path/to/graph` と指定することで、指定先に `index.html` や `viz.js` といったページの表示に必要なファイルが生成されます。  
+
+また、 `eevee serve` コマンドを実行すると、生成したファイルをサーブするウェブサーバが立ち上がります。
+
+### `output`
+
+`entity` `dao` `model` `repository` などのソースコードを自動生成する際の起点となるパスを指定することができます。デフォルトは `.` ( `eevee run` 実行時のディレクトリ ) です
+
+### `api`
+
+API定義が書かれた `YAML` ファイルが格納されているパスを指定することができます
+
+### `document`
+
+APIリクエスト・レスポンスを自動生成する機能を利用した際に、
+同時に自動生成する APIドキュメント の生成場所を指定することができます
+
+### `dao`
+
+#### `dao.name`
+
+`dao` というパッケージ名を変更するために使用します。
+`dao` の役割はそのままに、名前だけを変更したい場合に利用します
+
+#### `dao.default`
+
+クラスファイルを自動生成する際に利用する、デフォルトの `datastore` を変更できます。　　
+何も指定しない場合は `db` が使用されます
+
+`datastore` にはリリース時点では `db` の他に `rapidash` が利用できます
+
+#### `dao.datastore`
+
+`datastore` の種類ごとにどのタイミングでどんなプラグインを使用して自動生成を行うかを指定することができます。  
+以下の例では、 `db` では `create` と `update` 実行前のタイミングで、 `request-time` というプラグインを利用することを指定しています。同様に、 `datastore` として `rapidash` が指定された場合は `create` 実行前のタイミングで `other-plugin` というプラグインが使用されることを示しています。
+
+```yaml
+dao:
+  datastore:
+    db:
+      before-create:
+        - request-time
+      before-update:
+        - request-time
+    rapidash:
+      before-create:
+        - other-plugin
+```
+
+### `entity`
+
+#### `entity.name`
+
+`entity` というパッケージ名を変更するために使用します。
+`entity` の役割はそのままに、名前だけを変更したい場合に利用します
+
+#### `entity.plugins`
+
+`entity` のファイルを自動生成する際に使用するプラグインのリストを指定します
+
+### `model`
+
+#### `model.name`
+
+`model` というパッケージ名を変更するために使用します。
+`model` の役割はそのままに、名前だけを変更したい場合に利用します
+
+### `repository`
+
+#### `repository.name`
+
+`repository` というパッケージ名を変更するために使用します。
+`repository` の役割はそのままに、名前だけを変更したい場合に利用します
+
+### `context`
+
+`eevee` では、アプリケーション外部とやりとりする場面では常にAPIのインターフェースに `context.Context` を利用します。  
+ですがアプリケーションによっては、独自の `context` パッケージを使用したい場合もあるでしょう。  
+そういったケースに対応できるよう、 `context` パッケージのインポート先をカスタマイズすることができます。
+
+#### `context.import`
+
+デフォルトのインポート先 ( `context` ) を指定したパスでのインポートに置き換えます。  
+インポート先のパッケージで `type Context interface {}` を定義し、 `context.Context` とコンパチのインターフェースを実装することで、アプリケーション独自の `context` に差し替えることができます。
+
+### `plural`
+
+自動生成コードに複数形の名前を用いたい場合、クラスファイルで指定された名前を利用して自動的に変換しています。  
+ですが、すべての英単語を正しく変換できるわけではないため、
+自動生成された名前が間違っている場合は、正しい名前を個別に指定する必要があります。  
+
+#### `plural[].name`
+
+複数形にした場合の名前を書きます
+
+#### `plural[].one`
+
+単数形の場合の名前を書きます
+
+### `renderer`
+
+#### `renderer.style`
+
+クラスファイルのメンバごとにレンダリング時の挙動を指定するのが面倒な場合は、
+このパラメータを指定することで一括で挙動を変更することができます。
+
+- lower-camel : 出力時に lowerCamelCase を利用する
+- upper-camel : 出力時に UpperCamelCase を利用する
+- lower-snake : 出力時に lower_snake_case を利用する
+
+### `primitive_types`
+
+通常、クラスファイルのメンバには Go のプリミティブ型のみを指定するのですが、
+アプリケーションによってはプリミティブ型を拡張した型を用いたい場合もあるでしょう。
+
+(例)
+```go
+type ID uint64
+
+func (id ID) MarshalJSON() ([]byte, error) {
+  return []byte(fmt.Sprint(id)) // bigint をデコードできないクライアントのために、文字列として出力
+}
+```
+
+上記のようなケースでは、以下のように `.eevee.yml` に記述しておくことでクラスファイル内で `ID` 型が利用できるようになります。
+
+```yaml
+primitive_types:
+  - name: ID
+    package_name: entity
+    default: 1
+    as: uint64
+```
+
+#### `primitive_types[].name`
+
+型の名前を記述します
+
+#### `primitive_types[].package_name`
+
+対象の型がどのパッケージに属するかを指定します
+
+#### `primitive_types[].default`
+
+その型に値する値を出力する際のデフォルト値を指定します ( テストデータの自動生成に使用します )
+
+#### `primitive_types[].as`
+
+関連するプリミティブ型を指定します
+
 ## クラスファイル
 
 クラスファイルは、eevee が Go のソースコードを自動生成する際に読み込むファイルです。  
@@ -852,8 +1049,9 @@ members:
 ### `datastore`
 
 `dao` でやりとりする外部のミドルウェアの種類を記述します。  
-`.eevee.yml` で設定したデフォルトの `datastore` の名前が書き込まれます。  
-何も設定しない場合は `db` になります。
+クラスファイルを自動生成した場合、 `.eevee.yml` で設定したデフォルトの `datastore` が書き込まれます。 ( デフォルトは `db` です )
+`datastore: none` とすると、 `eevee` で用意している自動生成コードが何も使用されない状態で `dao` のソースコードが生成されます ( 初回は空のファイルになります )。  
+この機能は、 `eevee` の自動生成系には乗りたいが自分でファイルの内容をすべてカスタマイズしたい場合などに有効です。
 
 ### `index`
 
@@ -915,14 +1113,17 @@ members:
 
 ### `member.render`
 
-`model` として定義されたオブジェクトを `JSON` などにエンコードする際のふるまいをカスタマイズするために使用します。
-`render: false` として定義されたメンバは、エンコード・デコードの
-対象になりません。  
-また、 `render: inline` として定義された場合は、後述する `relation` が存在する場合に `relation` 先のオブジェクトをエンコードした結果をマージします。
+`model` として定義されたオブジェクトを `JSON` などにエンコードする際のふるまいをカスタマイズするために使用します。  
+`member.render` には複数の書き方が存在します。
 
+1. `render: name` : 指定した名前を `key` にして値を出力します
+2. `render: false` : `false` を指定するとエンコード・デコードの対象になりません
+3. `render: inline` : `inline` を指定すると、後述する `relation` が存在する場合に `relation` 先のオブジェクトをエンコードした結果 ( key: value のペア )を自身の出力結果にマージします
+4.
 ```yaml
 render:
-  json: group
+  json: lowerCamelName
+  yaml: lower_snake_name
 ```
 
 のように、レンダリングプロトコルごとにエンコード・デコード時の名前を変更することができます。 `json` や `msgpack` など、複数のプロトコルに対応したい場合はこの記法を利用してください。 ( 何も設定しない場合は、 `lowerCamelCase` が使用されます )
@@ -1075,8 +1276,8 @@ APIの名前を `user_getter` とし、次のように定義しました。
 ```
 
 説明のために、あえて複雑なレスポンスを定義してみました。  
-大事なのは `response` の部分で、ここにレスポンスの構造を記述していきます。  
-APIはリストで記述していきます。つまり、1つのファイルに複数のAPI定義を書くことができます。  
+大事なのは `response` の部分で、ここに出力したいレスポンスの構造を記述していきます。  
+APIはリストで記述します。つまり、1つのファイルに複数のAPI定義を書くことができます。  
 
 ### `name`
 
@@ -1092,7 +1293,7 @@ API にアクセスするための URI を記述します。ドキュメント�
 
 ### `method`
 
-HTTP メソッド ( `get` `post` `put` `delete` ) を記載してください。  
+HTTP メソッド ( `get` `post` `put` `delete` など ) を記載してください。  
 指定したメソッドにあわせて、リクエストパラメータのデコード処理が変化します。
 
 ### `response`
@@ -1147,6 +1348,11 @@ HTTP メソッド ( `get` `post` `put` `delete` ) を記載してください。
 `include.name` で指定された定義のうち、 `members` の中でリレーション定義をもつメンバに対して、
 レスポンスに含めたいものの定義を記述します。  
 再帰的に記述していくことが可能です。
+
+### `include_all`
+
+`include_all: true` と指定すると、すべての依存先メンバを含めます。  
+( ただし、クラスファイル側で `render: false` が指定されている場合は出力されません )
 
 # 各機能について
 
