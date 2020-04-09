@@ -169,8 +169,8 @@ type RenderStyle string
 
 const (
 	RenderStyleLowerCamel RenderStyle = "lower-camel"
-	RenderStyleUpperCamel             = "upper-camel"
-	RenderStyleLowerSnake             = "lower-snake"
+	RenderStyleUpperCamel RenderStyle = "upper-camel"
+	RenderStyleLowerSnake RenderStyle = "lower-snake"
 )
 
 type Renderer struct {
