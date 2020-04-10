@@ -923,10 +923,14 @@ func (g *Generator) create(h *types.RepositoryMethodHelper) *types.Method {
 				Id("value").Dot(member.Name.CamelName()).Op("=").
 					Func().Params(Id("ctx").Qual(h.Package("context"), "Context")).
 					Params(Op("*").Qual(h.Package("model"), member.Type.Class().Name.PluralCamelName()), Id("error")).Block(
-					Return(Id("values").Dot(fmt.Sprintf("Find%s", member.Name.CamelName())).Call(
+					List(Id("v"), Err()).Op(":=").Id("values").Dot(fmt.Sprintf("Find%s", member.Name.CamelName())).Call(
 						Id("ctx"),
 						h.Receiver().Dot(member.Type.Class().Name.CamelLowerName()),
-					)),
+					),
+					If(Err().Op("!=").Nil()).Block(
+						Return(Nil(), WrapError(h, fmt.Sprintf("failed to find %s: %%w", member.Name.SnakeName()))),
+					),
+					Return(Id("v"), Nil()),
 				),
 			}...)
 			continue
@@ -943,11 +947,15 @@ func (g *Generator) create(h *types.RepositoryMethodHelper) *types.Method {
 				Id("value").Dot(member.Name.CamelName()).Op("=").
 					Func().Params(Id("ctx").Qual(h.Package("context"), "Context")).
 					Params(Op("*").Qual(h.Package("model"), member.Type.Class().Name.PluralCamelName()), Id("error")).Block(
-					Return(Id("values").Dot(fmt.Sprintf("Find%s", member.Name.CamelName())).Call(
+					List(Id("v"), Err()).Op(":=").Id("values").Dot(fmt.Sprintf("Find%s", member.Name.CamelName())).Call(
 						Id("ctx"),
 						Id("value").Dot(internalMember.Name.CamelName()),
 						h.Receiver().Dot(member.Type.Class().Name.CamelLowerName()),
-					)),
+					),
+					If(Err().Op("!=").Nil()).Block(
+						Return(Nil(), WrapError(h, fmt.Sprintf("failed to find %s: %%w", member.Name.PluralSnakeName()))),
+					),
+					Return(Id("v"), Nil()),
 				),
 			}...)
 		} else {
@@ -958,11 +966,15 @@ func (g *Generator) create(h *types.RepositoryMethodHelper) *types.Method {
 				Id("value").Dot(member.Name.CamelName()).Op("=").
 					Func().Params(Id("ctx").Qual(h.Package("context"), "Context")).
 					Params(Op("*").Qual(h.Package("model"), member.Type.Class().Name.CamelName()), Id("error")).Block(
-					Return(Id("values").Dot(fmt.Sprintf("Find%s", member.Name.CamelName())).Call(
+					List(Id("v"), Err()).Op(":=").Id("values").Dot(fmt.Sprintf("Find%s", member.Name.CamelName())).Call(
 						Id("ctx"),
 						Id("value").Dot(internalMember.Name.CamelName()),
 						h.Receiver().Dot(member.Type.Class().Name.CamelLowerName()),
-					)),
+					),
+					If(Err().Op("!=").Nil()).Block(
+						Return(Nil(), WrapError(h, fmt.Sprintf("failed to find %s: %%w", member.Name.SnakeName()))),
+					),
+					Return(Id("v"), Nil()),
 				),
 			}...)
 		}
