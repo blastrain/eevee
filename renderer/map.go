@@ -98,7 +98,7 @@ func (r *MapRenderer) Render(h RendererHelper) *types.Method {
 			Type: types.TypeDeclareWithName("map[string]interface{}"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	codes := []Code{
@@ -152,7 +152,7 @@ func (r *MapRenderer) RenderWithOption(h RendererHelper) *types.Method {
 			Type: types.TypeDeclareWithName("map[string]interface{}"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	members := h.GetClass().Members
@@ -207,7 +207,7 @@ func (r *MapRenderer) RenderCollection(h RendererHelper) *types.Method {
 		Type: types.TypeDeclareWithName("[]map[string]interface{}"),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -252,7 +252,7 @@ func (r *MapRenderer) RenderCollectionWithOption(h RendererHelper) *types.Method
 			Type: types.TypeDeclareWithName("[]map[string]interface{}"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{

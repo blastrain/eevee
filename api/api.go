@@ -10,12 +10,12 @@ import (
 	"text/template"
 
 	"github.com/goccy/go-yaml"
+	"github.com/rakyll/statik/fs"
 	"go.knocknote.io/eevee/code"
 	"go.knocknote.io/eevee/config"
 	"go.knocknote.io/eevee/renderer"
 	_ "go.knocknote.io/eevee/static"
 	"go.knocknote.io/eevee/types"
-	"github.com/rakyll/statik/fs"
 	"golang.org/x/xerrors"
 )
 
@@ -285,9 +285,9 @@ func (g *Generator) generateRequest(path string, api []*types.API, classMap *map
 			}
 		}
 		buildBlock = append(buildBlock, code.Return(code.Id("req"), code.Nil()))
-		f.Add(code.Type().Id(subAPI.Name.CamelName()).Struct(requestFields...))
+		f.Add(code.GoType().Id(subAPI.Name.CamelName()).Struct(requestFields...))
 		f.Line()
-		f.Add(code.Type().Id(fmt.Sprintf("%sBuilder", subAPI.Name.CamelName())).Struct(builderFields...))
+		f.Add(code.GoType().Id(fmt.Sprintf("%sBuilder", subAPI.Name.CamelName())).Struct(builderFields...))
 		f.Line()
 		for _, param := range subAPI.Request.Params {
 			if param.In != types.InPath {
@@ -379,7 +379,7 @@ func (g *Generator) generateResponse(path string, api []*types.API, classMap *ma
 					code.Id(member.Name.CamelName()).Add(typeName),
 				)
 			}
-			f.Add(code.Type().Id(class.Name.CamelName()).Struct(structFields...))
+			f.Add(code.GoType().Id(class.Name.CamelName()).Struct(structFields...))
 			g.addMethod(f, renderer.Render(g.helper(class)))
 			g.addMethod(f, renderer.RenderWithOption(g.helper(class)))
 		}
@@ -414,7 +414,7 @@ func (g *Generator) generateResponse(path string, api []*types.API, classMap *ma
 		}
 		responseFields = append(responseFields, code.Id("renderedBytes").Index().Byte())
 		subAPI.Response.Type.Name = subAPI.Name
-		f.Add(code.Type().Id(subAPI.Name.CamelName()).Struct(responseFields...))
+		f.Add(code.GoType().Id(subAPI.Name.CamelName()).Struct(responseFields...))
 		g.addMethod(f, renderer.Render(g.helper(&subAPI.Response.Type.Class)))
 		g.addMethod(f, renderer.RenderWithOption(g.helper(&subAPI.Response.Type.Class)))
 		f.Line()
@@ -430,7 +430,7 @@ func (g *Generator) generateResponse(path string, api []*types.API, classMap *ma
 				code.Return(code.Id("r").Dot("renderedBytes"), code.Nil()),
 			}...),
 		)
-		f.Add(code.Type().Id(fmt.Sprintf("%sBuilder", subAPI.Name.CamelName())).Struct(builderFields...))
+		f.Add(code.GoType().Id(fmt.Sprintf("%sBuilder", subAPI.Name.CamelName())).Struct(builderFields...))
 		buildBlocks := []code.Code{
 			code.Var().Id("res").Id(subAPI.Name.CamelName()),
 		}

@@ -131,7 +131,7 @@ func (g *Generator) generate(class *types.Class, path string) ([]byte, error) {
 	for _, mtd := range otherMethods {
 		interfaceBody = append(interfaceBody, mtd.Decl.Interface(g.importList))
 	}
-	f.Add(code.Type().Id(class.Name.CamelName()).Interface(interfaceBody...))
+	f.Add(code.GoType().Id(class.Name.CamelName()).Interface(interfaceBody...))
 	structFields := []code.Code{
 		code.Id(fmt.Sprintf("%sDAO", class.Name.CamelLowerName())).Qual(g.importList.Package("dao"), class.Name.CamelName()),
 		code.Id("repo").Id("Repository"),
@@ -150,7 +150,7 @@ func (g *Generator) generate(class *types.Class, path string) ([]byte, error) {
 	}
 	f.Line()
 	f.Add(
-		code.Type().Id(fmt.Sprintf("%sImpl", class.Name.CamelName())).Struct(structFields...),
+		code.GoType().Id(fmt.Sprintf("%sImpl", class.Name.CamelName())).Struct(structFields...),
 	)
 	f.Line()
 	constructor, block := g.Constructor(g.helper(class), daoPackageDecl.Constructor, subClassConstructorMap)
@@ -204,7 +204,7 @@ func (g *Generator) generateExpect(class *types.Class, f *code.File, mtd *types.
 	structFields = append(structFields, mtd.Decl.Args.Code(g.importList)...)
 	structFields = append(structFields, mtd.Decl.Return.Code(g.importList)...)
 	f.Line()
-	f.Add(code.Type().Id(fmt.Sprintf("%s%sExpect", class.Name.CamelName(), mtd.Decl.MethodName)).Struct(structFields...))
+	f.Add(code.GoType().Id(fmt.Sprintf("%s%sExpect", class.Name.CamelName(), mtd.Decl.MethodName)).Struct(structFields...))
 	f.Line()
 	f.Add(g.expectReturn(g.helper(class), mtd).Generate(g.importList))
 	f.Line()
@@ -291,7 +291,7 @@ func (g *Generator) generateMock(class *types.Class, path string) ([]byte, error
 	}
 	f.Line()
 	f.Add(
-		code.Type().Id(fmt.Sprintf("%sMock", class.Name.CamelName())).Struct(
+		code.GoType().Id(fmt.Sprintf("%sMock", class.Name.CamelName())).Struct(
 			code.Id("expect").Op("*").Id(fmt.Sprintf("%sExpect", class.Name.CamelName())),
 		),
 	)
@@ -323,7 +323,7 @@ func (g *Generator) generateMock(class *types.Class, path string) ([]byte, error
 		g.generateExpect(class, f, mtd)
 	}
 	f.Line()
-	f.Add(code.Type().Id(fmt.Sprintf("%sExpect", class.Name.CamelName())).Struct(expectFields...))
+	f.Add(code.GoType().Id(fmt.Sprintf("%sExpect", class.Name.CamelName())).Struct(expectFields...))
 	f.Line()
 	f.Add(
 		code.Func().Id(fmt.Sprintf("New%sExpect", class.Name.CamelName())).Params().
@@ -387,9 +387,9 @@ func (g *Generator) generateRepositoryClass(path string, classes []*types.Class)
 	for _, importDeclare := range g.importList {
 		f.ImportName(importDeclare.Path, importDeclare.Name)
 	}
-	f.Add(code.Type().Id("Repository").Interface(interfaceFields...))
+	f.Add(code.GoType().Id("Repository").Interface(interfaceFields...))
 	f.Line()
-	f.Add(code.Type().Id("RepositoryImpl").Struct(fields...))
+	f.Add(code.GoType().Id("RepositoryImpl").Struct(fields...))
 	f.Line()
 	for _, class := range classes {
 		f.Add(code.Func().Params(code.Id("r").Op("*").Id("RepositoryImpl")).Id(class.Name.CamelName()).Params().Id(class.Name.CamelName()).Block(
@@ -464,7 +464,7 @@ func (g *Generator) generateRepositoryMockClass(path string, classes []*types.Cl
 		f.ImportName(importDeclare.Path, importDeclare.Name)
 	}
 	f.ImportName(fmt.Sprintf("%s/repository", g.cfg.ModulePath), "repository")
-	f.Add(code.Type().Id("RepositoryMock").Struct(fields...))
+	f.Add(code.GoType().Id("RepositoryMock").Struct(fields...))
 	f.Line()
 	for _, class := range classes {
 		f.Add(code.Func().Params(code.Id("r").Op("*").Id("RepositoryMock")).Id(class.Name.CamelName()).Params().

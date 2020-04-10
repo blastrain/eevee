@@ -104,7 +104,7 @@ func (g *Generator) generate(class *types.Class, path string) ([]byte, error) {
 		}
 		interfaceBody = append(interfaceBody, decl.Interface(g.importList))
 	}
-	f.Add(code.Type().Id(fmt.Sprintf("%sFinder", class.Name.CamelName())).Interface(interfaceBody...))
+	f.Add(code.GoType().Id(fmt.Sprintf("%sFinder", class.Name.CamelName())).Interface(interfaceBody...))
 	structFields := []code.Code{code.Op("*").Qual(g.importList.Package("entity"), class.Name.CamelName())}
 	structFields = append(structFields,
 		code.Id(fmt.Sprintf("%sDAO", class.Name.CamelLowerName())).Qual(g.importList.Package("dao"), class.Name.CamelName()),
@@ -131,16 +131,16 @@ func (g *Generator) generate(class *types.Class, path string) ([]byte, error) {
 	structFields = append(structFields, code.Id("savedValue").Qual(g.importList.Package("entity"), class.Name.CamelName()))
 	structFields = append(structFields, code.Id("conv").Id("ModelConverter"))
 	f.Line()
-	f.Add(code.Type().Id(class.Name.CamelName()).Struct(structFields...))
+	f.Add(code.GoType().Id(class.Name.CamelName()).Struct(structFields...))
 
 	collectionStructFields := []code.Code{code.Id("values").Index().Op("*").Id(class.Name.CamelName())}
 	for _, value := range g.helper(class).CollectionProperties() {
 		collectionStructFields = append(collectionStructFields, value.Code(g.importList))
 	}
 	f.Line()
-	f.Add(code.Type().Id(class.Name.PluralCamelName()).Struct(collectionStructFields...))
+	f.Add(code.GoType().Id(class.Name.PluralCamelName()).Struct(collectionStructFields...))
 	f.Line()
-	f.Add(code.Type().Id(fmt.Sprintf("%sCollection", class.Name.PluralCamelName())).Index().Op("*").Id(class.Name.PluralCamelName()))
+	f.Add(code.GoType().Id(fmt.Sprintf("%sCollection", class.Name.PluralCamelName())).Index().Op("*").Id(class.Name.PluralCamelName()))
 
 	f.Line()
 	f.Add(g.Constructor(g.helper(class)))
@@ -270,7 +270,7 @@ func (g *Generator) generateModelClass(path string, classes []*types.Class) erro
 		}
 		interfaceBody = append(interfaceBody, decl.Interface(g.importList))
 	}
-	f.Add(code.Type().Id("ModelConverter").Interface(interfaceBody...))
+	f.Add(code.GoType().Id("ModelConverter").Interface(interfaceBody...))
 	g.generateRenderOption(f)
 	source := []byte(fmt.Sprintf("%#v", f))
 	modelGoPath := filepath.Join(path, "model.go")

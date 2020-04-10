@@ -6,11 +6,11 @@ import (
 
 func (g *Generator) generateRenderOption(f *File) {
 	f.Line()
-	f.Add(Type().Id("BeforeRenderer").Interface(
+	f.Add(GoType().Id("BeforeRenderer").Interface(
 		Id("BeforeRender").Params(Qual(g.importList.Package("context"), "Context")).Id("error"),
 	))
 	f.Line()
-	f.Add(Type().Id("RenderOption").Struct(
+	f.Add(GoType().Id("RenderOption").Struct(
 		Id("Name").String(),
 		Id("IsIncludeAll").Bool(),
 		Id("onlyNames").Map(String()).Struct(),
@@ -45,7 +45,7 @@ func (g *Generator) generateRenderOption(f *File) {
 		Return(Id("ro").Dot("includes").Index(Id("name"))),
 	))
 	f.Line()
-	f.Add(Type().Id("RenderOptionBuilder").Struct(
+	f.Add(GoType().Id("RenderOptionBuilder").Struct(
 		Id("onlyNames").Map(String()).Struct(),
 		Id("exceptNames").Map(String()).Struct(),
 		Id("includes").Map(String()).Op("*").Id("RenderOption"),

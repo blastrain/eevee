@@ -73,7 +73,7 @@ func (h *RapidashEntityHandler) EncodeRapidash(helper *types.EntityMethodHelper)
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	codes := []Code{}
 	for _, member := range helper.Class.Members {
@@ -125,7 +125,7 @@ func (h *RapidashEntityHandler) EncodeRapidashPlural(helper *types.EntityMethodH
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -156,7 +156,7 @@ func (h *RapidashEntityHandler) DecodeRapidash(helper *types.EntityMethodHelper)
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	codes := []Code{}
 	for _, member := range helper.Class.Members {
@@ -199,7 +199,7 @@ func (h *RapidashEntityHandler) DecodeRapidashPlural(helper *types.EntityMethodH
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,

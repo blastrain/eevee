@@ -115,7 +115,7 @@ var (
 	SwitchFunc      = jen.SwitchFunc
 	Tag             = jen.Tag
 	True            = jen.True
-	Type            = jen.Type
+	GoType          = jen.Type
 	Uint            = jen.Uint
 	Uint16          = jen.Uint16
 	Uint32          = jen.Uint32

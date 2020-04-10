@@ -107,7 +107,7 @@ func (g *Generator) Create(h *types.ModelMethodHelper) *types.Method {
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -145,7 +145,7 @@ func (g *Generator) Update(h *types.ModelMethodHelper) *types.Method {
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	conditions := []Code{}
 	for _, member := range h.Class.Members {
@@ -194,7 +194,7 @@ func (g *Generator) Delete(h *types.ModelMethodHelper) *types.Method {
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -216,7 +216,7 @@ func (g *Generator) SetAlreadyCreated(h *types.ModelMethodHelper) *types.Method 
 	decl.MethodName = "SetAlreadyCreated"
 	decl.Args = append(decl.Args, &types.ValueDeclare{
 		Name: "isAlreadyCreated",
-		Type: types.TypeDeclareWithType(types.Bool),
+		Type: types.TypeDeclareWithType(types.BoolType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -275,7 +275,7 @@ func (g *Generator) Save(h *types.ModelMethodHelper) *types.Method {
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -307,7 +307,7 @@ func (g *Generator) CreateForCollection(h *types.ModelMethodHelper) *types.Metho
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -346,7 +346,7 @@ func (g *Generator) UpdateForCollection(h *types.ModelMethodHelper) *types.Metho
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -385,7 +385,7 @@ func (g *Generator) SaveForCollection(h *types.ModelMethodHelper) *types.Method 
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -479,7 +479,7 @@ func (g *Generator) EachWithError(h *types.ModelMethodHelper) *types.Method {
 		Type: types.TypeDeclareWithName(fmt.Sprintf("func(*%s) error", h.Class.Name.CamelName())),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -503,7 +503,7 @@ func (g *Generator) EachIndexWithError(h *types.ModelMethodHelper) *types.Method
 		Type: types.TypeDeclareWithName(fmt.Sprintf("func(int, *%s) error", h.Class.Name.CamelName())),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -553,7 +553,7 @@ func (g *Generator) Any(h *types.ModelMethodHelper) *types.Method {
 		Type: types.TypeDeclareWithName(fmt.Sprintf("func(*%s) bool", h.ModelName())),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Bool),
+		Type: types.TypeDeclareWithType(types.BoolType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -577,7 +577,7 @@ func (g *Generator) Some(h *types.ModelMethodHelper) *types.Method {
 		Type: types.TypeDeclareWithName(fmt.Sprintf("func(*%s) bool", h.ModelName())),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Bool),
+		Type: types.TypeDeclareWithType(types.BoolType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -595,7 +595,7 @@ func (g *Generator) IsIncluded(h *types.ModelMethodHelper) *types.Method {
 		Type: types.TypeDeclareWithName(fmt.Sprintf("func(*%s) bool", h.ModelName())),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Bool),
+		Type: types.TypeDeclareWithType(types.BoolType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -613,7 +613,7 @@ func (g *Generator) All(h *types.ModelMethodHelper) *types.Method {
 		Type: types.TypeDeclareWithName(fmt.Sprintf("func(*%s) bool", h.ModelName())),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Bool),
+		Type: types.TypeDeclareWithType(types.BoolType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -726,7 +726,7 @@ func (g *Generator) IsEmpty(h *types.ModelMethodHelper) *types.Method {
 	decl := h.CreateCollectionMethodDeclare()
 	decl.MethodName = "IsEmpty"
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Bool),
+		Type: types.TypeDeclareWithType(types.BoolType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -743,7 +743,7 @@ func (g *Generator) At(h *types.ModelMethodHelper) *types.Method {
 	decl.MethodName = "At"
 	decl.Args = append(decl.Args, &types.ValueDeclare{
 		Name: "idx",
-		Type: types.TypeDeclareWithType(types.Int),
+		Type: types.TypeDeclareWithType(types.IntType),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
 		Type: h.ModelType(),
@@ -867,7 +867,7 @@ func (g *Generator) Len(h *types.ModelMethodHelper) *types.Method {
 	decl := h.CreateCollectionMethodDeclare()
 	decl.MethodName = "Len"
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Int),
+		Type: types.TypeDeclareWithType(types.IntType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -1050,7 +1050,7 @@ func (g *Generator) collectionBySchemaType(h *types.ModelMethodHelper, member *t
 		})
 	}
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	var (
 		valuesType Code
@@ -1159,7 +1159,7 @@ func (g *Generator) findBy(h *types.ModelMethodHelper, member *types.Member) *ty
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	externalName := member.Relation.External.CamelName()
 	externalPluralName := member.Relation.External.PluralCamelName()
@@ -1206,7 +1206,7 @@ func (g *Generator) findAll(h *types.ModelMethodHelper, member *types.Member) *t
 		},
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	fieldName := member.Name.PluralCamelLowerName()
 	return &types.Method{

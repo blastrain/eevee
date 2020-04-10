@@ -209,7 +209,7 @@ func (r *Generator) expectTimes(h *types.RepositoryMethodHelper, mtd *types.Meth
 	decl.Args = types.ValueDeclares{
 		{
 			Name: "n",
-			Type: types.TypeDeclareWithType(types.Int),
+			Type: types.TypeDeclareWithType(types.IntType),
 		},
 	}
 	decl.Return = types.ValueDeclares{
@@ -244,7 +244,7 @@ func (r *Generator) Create(h *types.RepositoryMethodHelper) *types.Method {
 			Type: h.ModelClassType(),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{
@@ -460,7 +460,7 @@ func (r *Generator) CreateMock(h *types.RepositoryMethodHelper) *types.Method {
 		},
 		{
 			Name: "r1",
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{
@@ -487,7 +487,7 @@ func (r *Generator) Creates(h *types.RepositoryMethodHelper) *types.Method {
 			Type: h.ModelCollectionClassType(),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	className := h.Class.Name.CamelName()
@@ -532,7 +532,7 @@ func (r *Generator) CreatesMock(h *types.RepositoryMethodHelper) *types.Method {
 		},
 		{
 			Name: "r1",
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{

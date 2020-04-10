@@ -13,12 +13,12 @@ func WrapError(h CodeHelper, msg string) *Statement {
 
 func AddStruct(f *File, name string, codes []Code) {
 	f.Line()
-	f.Add(Type().Id(name).Struct(codes...))
+	f.Add(GoType().Id(name).Struct(codes...))
 }
 
 func TypeDef(f *File, name string, c Code) {
 	f.Line()
-	f.Add(Type().Id(name).Add(c))
+	f.Add(GoType().Id(name).Add(c))
 }
 
 type Import interface {

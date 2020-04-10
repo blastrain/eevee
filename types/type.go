@@ -161,8 +161,8 @@ func (d *Type) IsInt() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == Int.Name || typ == Int8.Name ||
-		typ == Int16.Name || typ == Int32.Name || typ == Int64.Name
+	return typ == IntType.Name || typ == Int8Type.Name ||
+		typ == Int16Type.Name || typ == Int32Type.Name || typ == Int64Type.Name
 }
 
 func (d *Type) IsUint() bool {
@@ -170,8 +170,8 @@ func (d *Type) IsUint() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == Uint.Name || typ == Uint8.Name ||
-		typ == Uint16.Name || typ == Uint32.Name || typ == Uint64.Name
+	return typ == UintType.Name || typ == Uint8Type.Name ||
+		typ == Uint16Type.Name || typ == Uint32Type.Name || typ == Uint64Type.Name
 }
 
 func (d *Type) IsFloat() bool {
@@ -179,7 +179,7 @@ func (d *Type) IsFloat() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == Float32.Name || typ == Float64.Name
+	return typ == Float32Type.Name || typ == Float64Type.Name
 }
 
 func (d *Type) IsBool() bool {
@@ -187,7 +187,7 @@ func (d *Type) IsBool() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == Bool.Name
+	return typ == BoolType.Name
 }
 
 func (d *Type) IsByte() bool {
@@ -195,7 +195,7 @@ func (d *Type) IsByte() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == Byte.Name
+	return typ == ByteType.Name
 }
 
 func (d *Type) IsString() bool {
@@ -203,7 +203,7 @@ func (d *Type) IsString() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == String.Name
+	return typ == StringType.Name
 }
 
 func (d *Type) IsComplex() bool {
@@ -211,7 +211,7 @@ func (d *Type) IsComplex() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == Complex64.Name || typ == Complex128.Name
+	return typ == Complex64Type.Name || typ == Complex128Type.Name
 }
 
 func (d *Type) IsRune() bool {
@@ -219,7 +219,7 @@ func (d *Type) IsRune() bool {
 	if d.As != "" {
 		typ = d.As
 	}
-	return typ == Rune.Name
+	return typ == RuneType.Name
 }
 
 func (d *Type) IsTime() bool {
@@ -429,44 +429,44 @@ func (d *TypeDeclare) UnmarshalYAML(unmarshal func(interface{}) error) error {
 }
 
 var (
-	Int            = &Type{Name: "int", IsPrimitive: true, DefaultValue: int(0)}
-	Int8           = &Type{Name: "int8", IsPrimitive: true, DefaultValue: int8(0)}
-	Int16          = &Type{Name: "int16", IsPrimitive: true, DefaultValue: int16(0)}
-	Int32          = &Type{Name: "int32", IsPrimitive: true, DefaultValue: int32(0)}
-	Int64          = &Type{Name: "int64", IsPrimitive: true, DefaultValue: int64(0)}
-	Uint           = &Type{Name: "uint", IsPrimitive: true, DefaultValue: uint(0)}
-	Uint8          = &Type{Name: "uint8", IsPrimitive: true, DefaultValue: uint8(0)}
-	Uint16         = &Type{Name: "uint16", IsPrimitive: true, DefaultValue: uint16(0)}
-	Uint32         = &Type{Name: "uint32", IsPrimitive: true, DefaultValue: uint32(0)}
-	Uint64         = &Type{Name: "uint64", IsPrimitive: true, DefaultValue: uint64(0)}
-	Float32        = &Type{Name: "float32", IsPrimitive: true, DefaultValue: float32(0)}
-	Float64        = &Type{Name: "float64", IsPrimitive: true, DefaultValue: float64(0)}
-	Bool           = &Type{Name: "bool", IsPrimitive: true, DefaultValue: false}
-	String         = &Type{Name: "string", IsPrimitive: true, DefaultValue: ""}
-	Complex64      = &Type{Name: "complex64", IsPrimitive: true, DefaultValue: 0}
-	Complex128     = &Type{Name: "complex128", IsPrimitive: true, DefaultValue: 0}
-	Byte           = &Type{Name: "byte", IsPrimitive: true, DefaultValue: 0}
-	Rune           = &Type{Name: "rune", IsPrimitive: true, DefaultValue: ""}
-	Error          = &Type{Name: "error"}
+	IntType        = &Type{Name: "int", IsPrimitive: true, DefaultValue: int(0)}
+	Int8Type       = &Type{Name: "int8", IsPrimitive: true, DefaultValue: int8(0)}
+	Int16Type      = &Type{Name: "int16", IsPrimitive: true, DefaultValue: int16(0)}
+	Int32Type      = &Type{Name: "int32", IsPrimitive: true, DefaultValue: int32(0)}
+	Int64Type      = &Type{Name: "int64", IsPrimitive: true, DefaultValue: int64(0)}
+	UintType       = &Type{Name: "uint", IsPrimitive: true, DefaultValue: uint(0)}
+	Uint8Type      = &Type{Name: "uint8", IsPrimitive: true, DefaultValue: uint8(0)}
+	Uint16Type     = &Type{Name: "uint16", IsPrimitive: true, DefaultValue: uint16(0)}
+	Uint32Type     = &Type{Name: "uint32", IsPrimitive: true, DefaultValue: uint32(0)}
+	Uint64Type     = &Type{Name: "uint64", IsPrimitive: true, DefaultValue: uint64(0)}
+	Float32Type    = &Type{Name: "float32", IsPrimitive: true, DefaultValue: float32(0)}
+	Float64Type    = &Type{Name: "float64", IsPrimitive: true, DefaultValue: float64(0)}
+	BoolType       = &Type{Name: "bool", IsPrimitive: true, DefaultValue: false}
+	StringType     = &Type{Name: "string", IsPrimitive: true, DefaultValue: ""}
+	Complex64Type  = &Type{Name: "complex64", IsPrimitive: true, DefaultValue: 0}
+	Complex128Type = &Type{Name: "complex128", IsPrimitive: true, DefaultValue: 0}
+	ByteType       = &Type{Name: "byte", IsPrimitive: true, DefaultValue: 0}
+	RuneType       = &Type{Name: "rune", IsPrimitive: true, DefaultValue: ""}
+	ErrorType      = &Type{Name: "error"}
 	PrimitiveTypes = map[string]*Type{
-		Int.Name:        Int,
-		Int8.Name:       Int8,
-		Int16.Name:      Int16,
-		Int32.Name:      Int32,
-		Int64.Name:      Int64,
-		Uint.Name:       Uint,
-		Uint8.Name:      Uint8,
-		Uint16.Name:     Uint16,
-		Uint32.Name:     Uint32,
-		Uint64.Name:     Uint64,
-		Float32.Name:    Float32,
-		Float64.Name:    Float64,
-		Bool.Name:       Bool,
-		String.Name:     String,
-		Complex64.Name:  Complex64,
-		Complex128.Name: Complex128,
-		Byte.Name:       Byte,
-		Rune.Name:       Rune,
+		IntType.Name:        IntType,
+		Int8Type.Name:       Int8Type,
+		Int16Type.Name:      Int16Type,
+		Int32Type.Name:      Int32Type,
+		Int64Type.Name:      Int64Type,
+		UintType.Name:       UintType,
+		Uint8Type.Name:      Uint8Type,
+		Uint16Type.Name:     Uint16Type,
+		Uint32Type.Name:     Uint32Type,
+		Uint64Type.Name:     Uint64Type,
+		Float32Type.Name:    Float32Type,
+		Float64Type.Name:    Float64Type,
+		BoolType.Name:       BoolType,
+		StringType.Name:     StringType,
+		Complex64Type.Name:  Complex64Type,
+		Complex128Type.Name: Complex128Type,
+		ByteType.Name:       ByteType,
+		RuneType.Name:       RuneType,
 	}
 )
 

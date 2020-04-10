@@ -360,7 +360,7 @@ func (g *Generator) newCreateDeclare(class *types.Class) (*types.MethodDeclare, 
 		Return: []*types.ValueDeclare{
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -402,7 +402,7 @@ func (g *Generator) newUpdateDeclare(class *types.Class) (*types.MethodDeclare, 
 		Return: []*types.ValueDeclare{
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -444,7 +444,7 @@ func (g *Generator) newDeleteDeclare(class *types.Class) (*types.MethodDeclare, 
 		Return: []*types.ValueDeclare{
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -483,7 +483,7 @@ func (g *Generator) newFindAllDeclare(class *types.Class) (*types.MethodDeclare,
 			},
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -515,11 +515,11 @@ func (g *Generator) newCountDeclare(class *types.Class) (*types.MethodDeclare, e
 		Return: []*types.ValueDeclare{
 			{
 				Name: "r",
-				Type: types.TypeDeclareWithType(types.Int64),
+				Type: types.TypeDeclareWithType(types.Int64Type),
 			},
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -571,7 +571,7 @@ func (g *Generator) newFindByDeclare(class *types.Class, p *types.FindParam) (*t
 			},
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -620,7 +620,7 @@ func (g *Generator) newFindBySliceDeclare(class *types.Class, p *types.FindParam
 			},
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -668,7 +668,7 @@ func (g *Generator) newFindByPluralDeclare(class *types.Class, p *types.FindPara
 			},
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -714,7 +714,7 @@ func (g *Generator) newUpdateByDeclare(class *types.Class, p *types.UpdateParam)
 		Return: types.ValueDeclares{
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -759,7 +759,7 @@ func (g *Generator) newUpdateByPluralDeclare(class *types.Class, p *types.Update
 		Return: types.ValueDeclares{
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -802,7 +802,7 @@ func (g *Generator) newDeleteByDeclare(class *types.Class, p *types.DeleteParam)
 		Return: types.ValueDeclares{
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -843,7 +843,7 @@ func (g *Generator) newDeleteByPluralDeclare(class *types.Class, p *types.Delete
 		Return: types.ValueDeclares{
 			{
 				Name: "e",
-				Type: types.TypeDeclareWithType(types.Error),
+				Type: types.TypeDeclareWithType(types.ErrorType),
 			},
 		},
 	}
@@ -1540,7 +1540,7 @@ func (g *Generator) generateDeclareImpl(class *types.Class) *Statement {
 		codes = append(codes, field.Code(g.importList))
 	}
 	implName := fmt.Sprintf("%sImpl", class.Name.CamelName())
-	return Type().Id(implName).Struct(codes...)
+	return GoType().Id(implName).Struct(codes...)
 }
 
 func (g *Generator) generateConstructor(class *types.Class, decl *types.ConstructorDeclare) *Statement {
@@ -1905,7 +1905,7 @@ func (g *Generator) generate(class *types.Class, path string) ([]byte, error) {
 		}
 	}
 	f.Line()
-	f.Add(Type().Id(class.Name.CamelName()).Interface(interfaceCodes...))
+	f.Add(GoType().Id(class.Name.CamelName()).Interface(interfaceCodes...))
 	f.Line()
 	f.Add(g.generateDeclareImpl(class))
 	f.Line()

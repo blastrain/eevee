@@ -24,7 +24,7 @@ func (r *JSONRenderer) appendIntCode(h RendererHelper, member *types.Member) Cod
 	} else {
 		value = h.Field(member.Name.CamelName())
 	}
-	if typ.Name != types.Int64.Name {
+	if typ.Name != types.Int64Type.Name {
 		value = Id("int64").Call(value)
 	}
 	if member.Type.IsPointer {
@@ -52,7 +52,7 @@ func (r *JSONRenderer) appendUintCode(h RendererHelper, member *types.Member) Co
 	} else {
 		value = h.Field(member.Name.CamelName())
 	}
-	if typ.Name != types.Uint64.Name {
+	if typ.Name != types.Uint64Type.Name {
 		value = Id("uint64").Call(value)
 	}
 	if member.Type.IsPointer {
@@ -80,7 +80,7 @@ func (r *JSONRenderer) appendFloatCode(h RendererHelper, member *types.Member) C
 	} else {
 		value = h.Field(member.Name.CamelName())
 	}
-	if typ.Name != types.Float64.Name {
+	if typ.Name != types.Float64Type.Name {
 		value = Id("float64").Call(value)
 	}
 	if member.Type.IsPointer {
@@ -281,7 +281,7 @@ func (r *JSONRenderer) Render(h RendererHelper) *types.Method {
 			Type: types.TypeDeclareWithName("[]byte"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	var assertTo Code
@@ -363,7 +363,7 @@ func (r *JSONRenderer) RenderWithOption(h RendererHelper) *types.Method {
 			Type: types.TypeDeclareWithName("[]byte"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	members := h.GetClass().Members
@@ -459,7 +459,7 @@ func (r *JSONRenderer) RenderCollection(h RendererHelper) *types.Method {
 		Type: types.TypeDeclareWithName("[]byte"),
 	})
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
@@ -509,7 +509,7 @@ func (r *JSONRenderer) RenderCollectionWithOption(h RendererHelper) *types.Metho
 			Type: types.TypeDeclareWithName("[]byte"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{
@@ -555,7 +555,7 @@ func (r *JSONRenderer) Marshaler(h RendererHelper) *types.Method {
 			Type: types.TypeDeclareWithName("[]byte"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{
@@ -599,7 +599,7 @@ func (r *JSONRenderer) MarshalerContext(h RendererHelper) *types.Method {
 			Type: types.TypeDeclareWithName("[]byte"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{
@@ -630,7 +630,7 @@ func (r *JSONRenderer) MarshalerCollection(h RendererHelper) *types.Method {
 			Type: types.TypeDeclareWithName("[]byte"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{
@@ -674,7 +674,7 @@ func (r *JSONRenderer) MarshalerCollectionContext(h RendererHelper) *types.Metho
 			Type: types.TypeDeclareWithName("[]byte"),
 		},
 		{
-			Type: types.TypeDeclareWithType(types.Error),
+			Type: types.TypeDeclareWithType(types.ErrorType),
 		},
 	}
 	return &types.Method{
@@ -710,7 +710,7 @@ func (r *JSONRenderer) Unmarshaler(h RendererHelper) *types.Method {
 		},
 	}
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	structFields := []Code{}
 	class := h.GetClass()
@@ -765,7 +765,7 @@ func (r *JSONRenderer) UnmarshalerCollection(h RendererHelper) *types.Method {
 		},
 	}
 	decl.Return = append(decl.Return, &types.ValueDeclare{
-		Type: types.TypeDeclareWithType(types.Error),
+		Type: types.TypeDeclareWithType(types.ErrorType),
 	})
 	return &types.Method{
 		Decl: decl,
