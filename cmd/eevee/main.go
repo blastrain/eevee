@@ -190,7 +190,5 @@ var opts Option
 
 func main() {
 	parser := flags.NewParser(&opts, flags.Default)
-	if _, err := parser.Parse(); err != nil {
-		fmt.Printf("%+v\n", err)
-	}
+	parser.Parse()
 }
