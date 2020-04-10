@@ -420,15 +420,27 @@ func (r *UserImpl) create(entity *entity.User, values *model.Users) *model.User 
 	value := model.NewUser(entity, r.userDAO)
 	r.userField.(*UserFieldImpl).repo = r.repo
 	value.UserFields = func(ctx context.Context) (*model.UserFields, error) {
-		return values.FindUserFields(ctx, value.ID, r.userField)
+		v, err := values.FindUserFields(ctx, value.ID, r.userField)
+		if err != nil {
+			return nil, xerrors.Errorf("failed to find user_fields: %w", err)
+		}
+		return v, nil
 	}
 	r.skill.(*SkillImpl).repo = r.repo
 	value.Skill = func(ctx context.Context) (*model.Skill, error) {
-		return values.FindSkill(ctx, value.SkillID, r.skill)
+		v, err := values.FindSkill(ctx, value.SkillID, r.skill)
+		if err != nil {
+			return nil, xerrors.Errorf("failed to find skill: %w", err)
+		}
+		return v, nil
 	}
 	r.world.(*WorldImpl).repo = r.repo
 	value.World = func(ctx context.Context) (*model.World, error) {
-		return values.FindWorld(ctx, value.WorldID, r.world)
+		v, err := values.FindWorld(ctx, value.WorldID, r.world)
+		if err != nil {
+			return nil, xerrors.Errorf("failed to find world: %w", err)
+		}
+		return v, nil
 	}
 	value.SetConverter(r.repo.(model.ModelConverter))
 	return value

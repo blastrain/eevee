@@ -237,7 +237,11 @@ func (r *UserFieldImpl) create(entity *entity.UserField, values *model.UserField
 	value := model.NewUserField(entity, r.userFieldDAO)
 	r.field.(*FieldImpl).repo = r.repo
 	value.Field = func(ctx context.Context) (*model.Field, error) {
-		return values.FindField(ctx, value.FieldID, r.field)
+		v, err := values.FindField(ctx, value.FieldID, r.field)
+		if err != nil {
+			return nil, xerrors.Errorf("failed to find field: %w", err)
+		}
+		return v, nil
 	}
 	value.SetConverter(r.repo.(model.ModelConverter))
 	return value
