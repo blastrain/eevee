@@ -1,5 +1,7 @@
 # eevee
 
+![Go](https://github.com/knocknote/eevee/workflows/Go/badge.svg)
+
 Generate model, repository, dao sources for Go application
 
 <img width="400px" src="https://user-images.githubusercontent.com/209884/29392112-b844b88e-8336-11e7-8435-2e472301cf36.png"></img>
