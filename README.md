@@ -2,6 +2,7 @@
 
 ![Go](https://github.com/knocknote/eevee/workflows/Go/badge.svg)
 [![codecov](https://codecov.io/gh/knocknote/eevee/branch/master/graph/badge.svg)](https://codecov.io/gh/knocknote/eevee)
+[![Go Report Card](https://goreportcard.com/badge/go.knocknote.io/eevee)](https://goreportcard.com/report/go.knocknote.io/eevee)
 
 Generate model, repository, dao sources for Go application
 
