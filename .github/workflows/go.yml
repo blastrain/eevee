@@ -18,4 +18,8 @@ jobs:
       run: go build -v cmd/eevee/main.go
 
     - name: Test
-      run: go test -v ./...
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        go test -v -coverprofile=coverage.out ./...
+        bash <(curl -s https://codecov.io/bash)
