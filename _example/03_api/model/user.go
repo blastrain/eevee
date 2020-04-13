@@ -1368,8 +1368,8 @@ func (m *Users) FindUserFields(ctx context.Context, id uint64, finder UserFieldF
 	if err != nil {
 		return nil, xerrors.Errorf("failed to FindByUserIDs: %w", err)
 	}
-	if userFields == nil {
-		return nil, xerrors.New("cannot find record")
+	if userFields.IsEmpty() {
+		return userFields, xerrors.New("cannot find record")
 	}
 	m.userFields = userFields
 	return m.userFields.FilterByUserID(id), nil

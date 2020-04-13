@@ -1163,21 +1163,38 @@ func (g *Generator) findBy(h *types.ModelMethodHelper, member *types.Member) *ty
 	})
 	externalName := member.Relation.External.CamelName()
 	externalPluralName := member.Relation.External.PluralCamelName()
-	return &types.Method{
-		Decl: decl,
-		Body: []Code{
-			If(h.Receiver().Dot(fieldName).Op("!=").Nil()).Block(
-				Return(h.Receiver().Dot(fieldName).
-					Dot(fmt.Sprintf(filterOrFirstByMethodTemplate, externalName)).Call(Id(internalMember.Name.CamelLowerName())), Nil()),
-			),
-			List(Id(fieldName), Err()).Op(":=").Id("finder").
-				Dot(fmt.Sprintf("FindBy%s", externalPluralName)).Call(Id("ctx"), h.Receiver().Dot(internalMember.Name.PluralCamelLowerName())),
-			If(Err().Op("!=").Nil()).Block(Return(Nil(), Qual(h.Package("xerrors"), "Errorf").Call(Lit(fmt.Sprintf("failed to FindBy%s: %%w", externalPluralName)), Err()))),
-			If(Id(fieldName).Op("==").Nil()).Block(Return(Nil(), Qual(h.Package("xerrors"), "New").Call(Lit("cannot find record")))),
-			h.Receiver().Dot(fieldName).Op("=").Id(fieldName),
+	body := []Code{
+		If(h.Receiver().Dot(fieldName).Op("!=").Nil()).Block(
 			Return(h.Receiver().Dot(fieldName).
 				Dot(fmt.Sprintf(filterOrFirstByMethodTemplate, externalName)).Call(Id(internalMember.Name.CamelLowerName())), Nil()),
-		},
+		),
+		List(Id(fieldName), Err()).Op(":=").Id("finder").
+			Dot(fmt.Sprintf("FindBy%s", externalPluralName)).Call(Id("ctx"), h.Receiver().Dot(internalMember.Name.PluralCamelLowerName())),
+		If(Err().Op("!=").Nil()).Block(Return(Nil(), Qual(h.Package("xerrors"), "Errorf").Call(Lit(fmt.Sprintf("failed to FindBy%s: %%w", externalPluralName)), Err()))),
+	}
+	if !member.Nullable {
+		if member.IsCollectionType() {
+			body = append(body,
+				If(Id(fieldName).Dot("IsEmpty").Call()).Block(
+					Return(Id(fieldName), Qual(h.Package("xerrors"), "New").Call(Lit("cannot find record"))),
+				),
+			)
+		} else {
+			body = append(body,
+				If(Id(fieldName).Op("==").Nil()).Block(
+					Return(Nil(), Qual(h.Package("xerrors"), "New").Call(Lit("cannot find record"))),
+				),
+			)
+		}
+	}
+	body = append(body, []Code{
+		h.Receiver().Dot(fieldName).Op("=").Id(fieldName),
+		Return(h.Receiver().Dot(fieldName).
+			Dot(fmt.Sprintf(filterOrFirstByMethodTemplate, externalName)).Call(Id(internalMember.Name.CamelLowerName())), Nil()),
+	}...)
+	return &types.Method{
+		Decl: decl,
+		Body: body,
 	}
 }
 
