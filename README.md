@@ -7,7 +7,7 @@
 
 Generate model, repository, dao sources for Go application
 
-<img width="400px" src="https://user-images.githubusercontent.com/209884/29392112-b844b88e-8336-11e7-8435-2e472301cf36.png"></img>
+<img width="500px" src="https://user-images.githubusercontent.com/209884/79103149-0ed3e680-7da7-11ea-8b89-474a01db7bad.png"></img>
 
 `eevee` はアプリケーション開発時に必要となる  
 キャッシュやデータベースといったミドルウェアとの効率的なデータのやりとりや  
