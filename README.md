@@ -147,7 +147,7 @@ $ go get go.knocknote.io/eevee/cmd/eevee
 ```
 
 無事インストールできていれば、 `$GOPATH/bin/eevee` があるはずです。  
-`eevee help` が実行できれば、インストールは完了です
+`eevee --help` が実行できれば、インストールは完了です
 
 ## 作業ディレクトリの作成
 

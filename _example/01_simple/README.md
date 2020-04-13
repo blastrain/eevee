@@ -28,7 +28,7 @@ EOS
 ## 4. Execute eevee
 
 ```bash
-$ eevee --schema schema --relation config
+$ eevee --schema schema --class config
 ```
 
 generated the following files
