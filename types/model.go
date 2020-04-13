@@ -125,7 +125,7 @@ func (h *ModelMethodHelper) CollectionProperties() ValueDeclares {
 		}
 	}
 	var sortedKeys []string
-	for k, _ := range propertyMap {
+	for k := range propertyMap {
 		sortedKeys = append(sortedKeys, k)
 	}
 	sort.Strings(sortedKeys)

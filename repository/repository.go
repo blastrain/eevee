@@ -237,8 +237,8 @@ func (g *Generator) generateMock(class *types.Class, path string) ([]byte, error
 	toModelMethod := g.ToModelMock(g.helper(class))
 	toModelsMethod := g.ToModelsMock(g.helper(class))
 	methodNameMap := map[string]struct{}{
-		"Create":  struct{}{},
-		"Creates": struct{}{},
+		"Create":  {},
+		"Creates": {},
 	}
 	findMethods := []*types.Method{}
 	for _, method := range daoPackageDecl.Methods {

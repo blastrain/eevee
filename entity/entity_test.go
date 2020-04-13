@@ -4,10 +4,10 @@ import (
 	"path/filepath"
 	"testing"
 
+	"go.knocknote.io/eevee/class"
 	"go.knocknote.io/eevee/config"
 	"go.knocknote.io/eevee/entity"
 	_ "go.knocknote.io/eevee/plugin"
-	"go.knocknote.io/eevee/class"
 )
 
 func TestGenerate(t *testing.T) {

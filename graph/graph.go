@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/rakyll/statik/fs"
 	"go.knocknote.io/eevee/config"
 	_ "go.knocknote.io/eevee/static"
 	"go.knocknote.io/eevee/types"
-	"github.com/rakyll/statik/fs"
 	"golang.org/x/xerrors"
 )
 

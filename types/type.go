@@ -673,7 +673,7 @@ func (c *Class) TestData() *TestData {
 			"default": defaultObject,
 		},
 		Collection: map[string][]*TestObject{
-			"defaults": []*TestObject{defaultObject},
+			"defaults": {defaultObject},
 		},
 	}
 }
