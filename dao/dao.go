@@ -1182,9 +1182,7 @@ func (g *Generator) newDeleteByPluralMethodGenerator(class *types.Class, param *
 		return nil, xerrors.Errorf("failed to declaration for deleteByPlural: %w", err)
 	}
 	escapedTableName := fmt.Sprintf("`%s`", class.Name.PluralSnakeName())
-	columns := []string{}
 	member := param.Args.Members[0]
-	columns = append(columns)
 	query := fmt.Sprintf(`DELETE FROM %s WHERE %s`,
 		escapedTableName,
 		fmt.Sprintf("`%s` IN (%%s)", member.Name.SnakeName()),

@@ -75,6 +75,9 @@ func GenerateByClasses(cfg *config.Config, classes []*types.Class) error {
 
 func Generate(cfg *config.Config) error {
 	schemata, err := getSchemata(cfg)
+	if err != nil {
+		return xerrors.Errorf("failed to get schemata: %w", err)
+	}
 	writer, err := class.NewWriter(cfg.ClassPath)
 	if err != nil {
 		return xerrors.Errorf("failed to initialize relation writer by %s: %w", cfg.ClassPath, err)
