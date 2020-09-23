@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/knocknote/vitess-sqlparser/sqlparser"
+	"github.com/blastrain/vitess-sqlparser/sqlparser"
 	"go.knocknote.io/eevee/plural"
 	"go.knocknote.io/eevee/types"
 	"golang.org/x/xerrors"
