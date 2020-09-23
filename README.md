@@ -1,8 +1,8 @@
 # eevee
 
 [![GoDoc](https://godoc.org/go.knocknote.io/eevee?status.svg)](https://pkg.go.dev/mod/go.knocknote.io/eevee)
-![Go](https://github.com/knocknote/eevee/workflows/Go/badge.svg)
-[![codecov](https://codecov.io/gh/knocknote/eevee/branch/master/graph/badge.svg)](https://codecov.io/gh/knocknote/eevee)
+![Go](https://github.com/blastrain/eevee/workflows/Go/badge.svg)
+[![codecov](https://codecov.io/gh/blastrain/eevee/branch/master/graph/badge.svg)](https://codecov.io/gh/blastrain/eevee)
 [![Go Report Card](https://goreportcard.com/badge/go.knocknote.io/eevee)](https://goreportcard.com/report/go.knocknote.io/eevee)
 
 Generate model, repository, dao sources for Go application
@@ -138,7 +138,7 @@ Generate model, repository, dao sources for Go application
 # 使い方
 
 まずは実際に eevee を利用することで何ができるようになるのかを見ていきます。  
-ここで紹介しているコードは [_example/01_simple](https://github.com/knocknote/eevee/tree/master/_example/01_simple) 配下に置かれています。
+ここで紹介しているコードは [_example/01_simple](https://github.com/blastrain/eevee/tree/master/_example/01_simple) 配下に置かれています。
 
 ## eevee のインストール
 
@@ -276,7 +276,7 @@ $ eevee init --schema schema --class config
 `--class` オプションでクラスファイルが生成されるディレクトリを指定します ( 今回は `config` )  
 
 ※ eevee で Go のソースコードを自動生成する際、上述の **クラスファイル** というものを参照します。  
-これについては[後で詳しく](https://github.com/knocknote/eevee#%E3%82%AF%E3%83%A9%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)説明します。
+これについては[後で詳しく](https://github.com/blastrain/eevee#%E3%82%AF%E3%83%A9%E3%82%B9%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB)説明します。
 
 うまくいくと `.eevee.yml` というファイルが作成されているはずです。  
 この状態で、以下のコマンドを実行してください
@@ -1484,11 +1484,11 @@ users, _ := repo.User().FindByIDs(ctx, []uint64{1, 2, 3})
 
 スライスではなく構造体を用いることで、  
 このコレクションインスタンス自体がクエリ結果のキャッシュを持つことを可能にしています。  
-例えば `_example/02_relation` を例にとると https://github.com/knocknote/eevee/blob/master/_example/02_relation/model/user.go#L44-L52 に書かれている通り `Users` 構造体として定義され、 `skills` や `userFields` といったキャッシュ用のメンバを持っていることが確認できると思います。
+例えば `_example/02_relation` を例にとると https://github.com/blastrain/eevee/blob/master/_example/02_relation/model/user.go#L44-L52 に書かれている通り `Users` 構造体として定義され、 `skills` や `userFields` といったキャッシュ用のメンバを持っていることが確認できると思います。
 
 ではこの `skills` や `userFields` に値が入るのはいつかというと、 
 例えば `skills` は `FindSkill` を呼んだときです。 ( つまり `user` がもつ `skillID` を使って `1:1` 対応する `skill` を引くタイミング )
-https://github.com/knocknote/eevee/blob/master/_example/02_relation/model/user.go#L1396-L1409 
+https://github.com/blastrain/eevee/blob/master/_example/02_relation/model/user.go#L1396-L1409 
 
 このメソッドの処理を読むと、 `skillID` を利用して `skill` を取得する際に、 `finder.FindByID(skillID)` とするのではなく、 `finder.FindByIDs(skillIDs)` と複数の `skillID` を使って取得しているのがわかると思います。  
 
@@ -1506,7 +1506,7 @@ users.Each(func(user *model.User)) {
 ```
 
 この答えは、 `repository` パッケージ内の次の箇所にあります。
-https://github.com/knocknote/eevee/blob/master/_example/02_relation/repository/user.go#L411-L435
+https://github.com/blastrain/eevee/blob/master/_example/02_relation/repository/user.go#L411-L435
 
 
 各 `*model.User` の他インスタンスを取得するためのアクセサは関数オブジェクトになっており、それをこの部分で作っています。  
